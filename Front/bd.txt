@@ -1,0 +1,83 @@
+CategoriaEjercicio: FG(MusculoObjetivo) FG(Ejercicios)
+    Pierna
+        Cuadricep
+        Femoral
+        Chamorro
+        Glúteo
+    Empuje
+        Pecho
+        Tricep
+        Hombro
+    Jalon
+        Espalda
+        Bicep
+        Antebrazo
+
+MusculoObjetivo: FG(CategoriaEjercicio)
+    Pecho
+    Tricep
+    Hombro
+    Espalda
+    Antebrazo
+    Bicep
+    Cuadricep
+    Femoral
+    Chamorro
+    Glúteo
+
+Ejercicios: 
+    Press banca 
+    Peck Deck
+    Press inclinado
+    Press declinado
+    Press con mancuernas
+
+    Press francés 
+    Extensión trasnuca polea 
+    Extensión con soga 
+    Extensión con mancuernas 
+
+    Elevaciones laterales polea/máquina
+    Elevaciones laterales mancuernas
+    Press militar mancuera/barra/máquina
+    Remo con agarre amplio
+    Peck Deck
+
+    Jalon vertical 
+    Remo gironda
+    Pull over 
+    Dominadas 
+    Dominadas asistidas 
+    Remo en máquina
+
+    Curl de muñeca
+    Curl de muñeca inverso
+    Front lever
+    Curl invertido
+    Curl martillo
+
+    Curl de Bicep
+    Curl mesero
+    Curl en máquina/polea
+    Curl inclinado 
+    Curl araña
+
+    Sentadilla Hack
+    Sentadilla con barra
+    Sentadilla en smith
+    Búlgaras
+    Extensiones de Cuadricep
+    Prensa
+
+    Curl acostado
+    Curl sentado
+    Curl de pie 
+    Peso muerto
+
+    Elevaciones de pie
+    Elevaciones sentado
+
+    Hip thrust
+    Patada de glúteo 
+    Búlgaras
+

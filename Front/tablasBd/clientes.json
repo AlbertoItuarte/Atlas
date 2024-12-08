@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "Nombre": "Ana",
+    "ApellidoP": "Pérez",
+    "ApellidoM": "Gómez",
+    "IdCoach": 1,
+    "Correo": "ana.perez@gmail.com",
+    "Celular": "5551234567",
+    "FechaNac": "1995-04-12"
+  },
+  {
+    "Id": 2,
+    "Nombre": "Juan",
+    "ApellidoP": "Hernández",
+    "ApellidoM": "Martínez",
+    "IdCoach": 1,
+    "Correo": "juan.hernandez@hotmail.com",
+    "Celular": "5559876543",
+    "FechaNac": "1989-11-23"
+  },
+  {
+    "Id": 3,
+    "Nombre": "Sofía",
+    "ApellidoP": "López",
+    "ApellidoM": "Ramírez",
+    "IdCoach": 1,
+    "Correo": "sofia.lopez@yahoo.com",
+    "Celular": "5555678910",
+    "FechaNac": "2001-07-15"
+  },
+  {
+    "Id": 4,
+    "Nombre": "Carlos",
+    "ApellidoP": "González",
+    "ApellidoM": "Torres",
+    "IdCoach": 1,
+    "Correo": "carlos.gonzalez@outlook.com",
+    "Celular": "5552345678",
+    "FechaNac": "1993-02-28"
+  }
+]
