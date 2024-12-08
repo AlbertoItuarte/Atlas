@@ -31,19 +31,16 @@ const HomeScreen = () => {
   return (
     <Screen pagina={"Atlas"}>
       <View className="block justify-between items-center h-screen px-4 bg-black">
-        <View className="block justify-between items-center h-14 px-4">
-          <Image
-            source={require("../assets/Mamado.png")}
-            className="w-80 mt-10"
-          />
+        <View className="block justify-between items-center  px-4">
+          <Image source={require("../assets/Mamado.png")} className="w-80 " />
 
           <Image
             source={require("../assets/Frase.png")}
-            className="w-80 h-20 mt-10"
+            className="w-80 h-20 mt-24"
           />
           <Image
             source={require("../assets/Footer.png")}
-            className="w-screen h-28 mt-16"
+            className="w-screen h-28 mt-32"
           />
         </View>
       </View>

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, Image, TextInput } from "react-native";
 import axios from "axios";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const EditarUsuario = ({ isOpen, onClose, cliente }) => {
   const [newCliente, setNewCliente] = useState({});
@@ -12,6 +13,7 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
   const [apellidoM, setApellidoM] = useState("");
   const [correo, setCorreo] = useState("");
   const [celular, setCelular] = useState("");
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (cliente) {
@@ -80,6 +82,7 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
 
   return (
     <View
+      style={{ paddingTop: insets.top + 20 }}
       className={`flex justify-center space-y-6 items-center bg-black ${isOpen ? "absolute -top-36 bottom-0 left-0 w-screen z-50" : "hidden"}`}
     >
       <View className="flex flex-row space-x-32">

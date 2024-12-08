@@ -13,6 +13,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EditarUsuario from "../components/EditarUsuario";
 import AgregarCliente from "../components/AgregarCliente";
+import { Link } from "expo-router";
 
 export default function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -160,24 +161,26 @@ export default function Clientes() {
                 }}
                 className=""
               >
-                <View className="flex flex-row justify-between items-center">
-                  <Text className="text-white w-1/5 text-center">
-                    {item.Nombre}
-                  </Text>
-                  <Text className="text-white w-1/5 text-center">
-                    {item.ApellidoP}
-                  </Text>
-                  <Text className="text-white w-1/5 text-center">
-                    {item.Celular}
-                  </Text>
-                  <Text className="text-white w-1/5 text-center">
-                    {item.Correo}
-                  </Text>
-                  <Text className="text-white w-1/5 text-center">
-                    {new Date().getFullYear() -
-                      new Date(item.FechaNac).getFullYear()}
-                  </Text>
-                </View>
+                <Link href={`/Rutinas/${item.Id}`}>
+                  <View className="flex flex-row justify-between items-center">
+                    <Text className="text-white w-1/5 text-center">
+                      {item.Nombre}
+                    </Text>
+                    <Text className="text-white w-1/5 text-center">
+                      {item.ApellidoP}
+                    </Text>
+                    <Text className="text-white w-1/5 text-center">
+                      {item.Celular}
+                    </Text>
+                    <Text className="text-white w-1/5 text-center">
+                      {item.Correo}
+                    </Text>
+                    <Text className="text-white w-1/5 text-center">
+                      {new Date().getFullYear() -
+                        new Date(item.FechaNac).getFullYear()}
+                    </Text>
+                  </View>
+                </Link>
               </TouchableHighlight>
             )}
           />
@@ -191,7 +194,7 @@ export default function Clientes() {
                   editar(item);
                 }}
                 onPress={() => {
-                  buscar(item.Id);
+                  rutina(item.Id);
                 }}
                 className=""
               >

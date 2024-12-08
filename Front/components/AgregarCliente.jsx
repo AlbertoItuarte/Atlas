@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, Image, TextInput } from "react-native";
 import axios from "axios";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const EditarUsuario = ({ isOpen, onClose, coachId }) => {
   const [nombre, setNombre] = useState("");
@@ -10,9 +11,22 @@ const EditarUsuario = ({ isOpen, onClose, coachId }) => {
   const [correo, setCorreo] = useState("");
   const [celular, setCelular] = useState("");
   const [fechaNac, setFechaNac] = useState("");
+  const insets = useSafeAreaInsets();
 
   const handleAdd = async () => {
     try {
+      if (
+        nombre.trim() === "" ||
+        apellidoP.trim() === "" ||
+        apellidoM.trim() === "" ||
+        correo.trim() === "" ||
+        celular.trim() === "" ||
+        fechaNac.trim() === ""
+      ) {
+        console.log("Faltan datos");
+        alert("Faltan datos");
+        return;
+      }
       const response = await axios.post(
         `http://192.168.1.75:5000/clientes/agregar`,
         {
@@ -44,9 +58,10 @@ const EditarUsuario = ({ isOpen, onClose, coachId }) => {
 
   return (
     <View
+      style={{ paddingTop: insets.top + 20 }}
       className={`flex justify-center space-y-6 items-center bg-black ${isOpen ? "absolute -top-36 bottom-0 left-0 w-screen z-50" : "hidden"}`}
     >
-      <View className="flex flex-row w-full justify-between space-x-32 items-center">
+      <View className="flex flex-row  w-full justify-between space-x-32 items-center">
         <Text className="text-cyan-300 text-2xl">Agregar Cliente</Text>
         <Pressable onPress={manejarCierre} className="">
           <Image source={require("../assets/Salir.png")} className="" />
