@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, Image, TextInput } from "react-native";
 import axios from "axios";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Confirmacion from "./Confirmacion";
 
 const EditarUsuario = ({ isOpen, onClose, cliente }) => {
   const [newCliente, setNewCliente] = useState({});
@@ -14,6 +15,7 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
   const [correo, setCorreo] = useState("");
   const [celular, setCelular] = useState("");
   const insets = useSafeAreaInsets();
+  const [isOpened, setIsOpened] = useState(false);
 
   useEffect(() => {
     if (cliente) {
@@ -25,20 +27,16 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
       setCorreo(cliente.Correo);
       setCelular(cliente.Celular);
       setFechaNac(cliente.FechaNac);
-    } else {
-      setNewCliente({});
-      setId("");
-      setNombre("");
-      setApellidoP("");
-      setApellidoM("");
-      setCorreo("");
-      setCelular("");
-      setFechaNac("");
     }
   }, [cliente]);
 
   const manejarCierre = () => {
     onClose();
+  };
+
+  const abrirConfirmacion = () => {
+    console.log("Abriendo confirmación...");
+    setIsOpened(true);
   };
 
   const handleSave = async () => {
@@ -76,16 +74,32 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
     }
   };
 
-  const handleDelete = () => {
-    console.log("Eliminando cliente...");
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        "http://192.168.1.75:5000/clientes/eliminar",
+        {
+          params: { id },
+        }
+      );
+
+      onClose(); // Cierra el modal o realiza alguna acción después de eliminar
+    } catch (error) {
+      console.error("Error al eliminar cliente:", error.message);
+    }
   };
 
   return (
     <View
       style={{ paddingTop: insets.top + 20 }}
-      className={`flex justify-center space-y-6 items-center bg-black ${isOpen ? "absolute -top-36 bottom-0 left-0 w-screen z-50" : "hidden"}`}
+      className={`flex justify-center space-y-6 h-screen items-center bg-black ${isOpen ? "absolute -top-36 bottom-0 left-0 h-full w-screen z-50" : "hidden"}`}
     >
-      <View className="flex flex-row space-x-32">
+      <Confirmacion
+        isOpen={isOpened}
+        onClose={() => setIsOpened(false)}
+        eliminar={handleDelete}
+      />
+      <View className="flex flex-row  space-x-32">
         <Text className="text-white text-2xl">Editar Cliente</Text>
         <Pressable onPress={manejarCierre} className="">
           <Image source={require("../assets/Salir.png")} className="" />
@@ -136,12 +150,14 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
         <TextInput
           onChangeText={setFechaNac}
           className="text-white rounded-md pl-2 bg-gray-500 w-8/12"
-          value={fechaNac || ""}
+          value={
+            fechaNac ? fechaNac.split("T")[0] : "Error al obtener la fecha"
+          }
         />
       </View>
       <View className="flex flex-row items-center space-x-8">
         <Pressable
-          onPress={handleDelete}
+          onPress={abrirConfirmacion}
           className="bg-red-500 rounded-md px-6 py-4"
         >
           <Text className="text-white">Eliminar Cliente</Text>

@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS Contratos (
     FechaInicio DATE NOT NULL,
     FechaFin DATE NOT NULL,
     Monto DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id),
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE
     FOREIGN KEY (IdPlan) REFERENCES Planes(id)
 );
 
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS Pagos (
     IdContrato INT NOT NULL,
     Monto DECIMAL(10, 2) NOT NULL,
     FechaPago DATE NOT NULL,
-    FOREIGN KEY (IdContrato) REFERENCES Contratos(Id)
+    FOREIGN KEY (IdContrato) REFERENCES Contratos(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS RutinasClientes (
@@ -106,9 +106,10 @@ CREATE TABLE IF NOT EXISTS RutinasClientes (
     IdEjercicio INT NOT NULL,
     Series INT NOT NULL,
     Repeticiones INT NOT NULL,
+    Dia VARCHAR(20) NOT NULL,
     FOREIGN KEY (IdCliente) REFERENCES Clientes(Id),
     FOREIGN KEY (IdEjercicio) REFERENCES Ejercicios(Id),
-    UNIQUE KEY unique_rutina_cliente (IdCliente, IdEjercicio) -- Evita duplicados
+    UNIQUE KEY unique_rutina_cliente (IdCliente, IdEjercicio, Dia) -- Evita duplicados
 );
 
 -- Crear la tabla MisRutinas si no existe
@@ -215,10 +216,10 @@ VALUES
 
 INSERT INTO RutinasClientes (IdCliente, IdEjercicio, Series, Repeticiones)
 VALUES
-(1, 3, 3, 12),
-(1, 13, 4, 8),
-(1, 36, 3, 15),
-(1, 2, 4, 15);
+(1, 3, 3, 12, 'Lunes'),
+(1, 13, 4, 8, 'Lunes'),
+(1, 36, 3, 15, 'Lunes'),
+(1, 2, 4, 15, 'Lunes');
 
 INSERT INTO MisRutinas (IdCoach, IdEjercicio, Series, Repeticiones)
 VALUES
@@ -246,3 +247,38 @@ VALUES
 (2, 500, '2024-02-15'),
 (3, 500, '2024-03-15'),
 (4, 1400, '2024-01-15');
+
+ALTER TABLE EvaluacionesFisicas
+DROP FOREIGN KEY EvaluacionesFisicas_ibfk_1;
+
+ALTER TABLE EvaluacionesFisicas
+ADD CONSTRAINT EvaluacionesFisicas_ibfk_1
+FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE;
+
+ALTER TABLE Horarios
+DROP FOREIGN KEY Horarios_ibfk_1;
+
+ALTER TABLE Horarios
+ADD CONSTRAINT Horarios_ibfk_1
+FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE;
+
+ALTER TABLE Contratos
+DROP FOREIGN KEY Contratos_ibfk_1;
+
+ALTER TABLE Contratos
+ADD CONSTRAINT Contratos_ibfk_1
+FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE;
+
+ALTER TABLE Pagos
+DROP FOREIGN KEY Pagos_ibfk_1;
+
+ALTER TABLE Pagos
+ADD CONSTRAINT Pagos_ibfk_1
+FOREIGN KEY (IdContrato) REFERENCES Contratos(Id) ON DELETE CASCADE;
+
+ALTER TABLE RutinasClientes
+DROP FOREIGN KEY RutinasClientes_ibfk_1;
+
+ALTER TABLE RutinasClientes
+ADD CONSTRAINT RutinasClientes_ibfk_1
+FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE;

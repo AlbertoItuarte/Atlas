@@ -16,19 +16,11 @@ const Screen = ({ children, pagina }) => {
         <View className="flex pb-20">
           <Cabecera pagina={pagina} />
         </View>
-        <ScrollView className="">{children}</ScrollView>
+        <ScrollView className="h-screen">{children}</ScrollView>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-    padding: 20,
-  },
-});
 
 Screen.prototype = {
   children: PropTypes.node,

@@ -1,6 +1,13 @@
 // EditarUsuario.js
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, Image, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Image,
+  TextInput,
+  ScrollView,
+} from "react-native";
 import axios from "axios";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -59,7 +66,7 @@ const EditarUsuario = ({ isOpen, onClose, coachId }) => {
   return (
     <View
       style={{ paddingTop: insets.top + 20 }}
-      className={`flex justify-center space-y-6 items-center bg-black ${isOpen ? "absolute -top-36 bottom-0 left-0 w-screen z-50" : "hidden"}`}
+      className={`flex justify-center space-y-6 h-screen items-center bg-black ${isOpen ? "absolute -top-32  h-full bottom-0 left-0 w-screen z-50" : "hidden"}`}
     >
       <View className="flex flex-row  w-full justify-between space-x-32 items-center">
         <Text className="text-cyan-300 text-2xl">Agregar Cliente</Text>

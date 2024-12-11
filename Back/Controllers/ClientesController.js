@@ -26,7 +26,7 @@ const ClientesController = {
   editarCliente: async (req, res) => {
     try {
       const { id } = req.params; // ID del cliente desde los parámetros de la URL
-      // console.log("ID del cliente en controlador:", id); // Agregar log para depuración
+      console.log("ID del cliente en controlador:", id); // Agregar log para depuración
       const cliente = req.body; // Nuevos datos del cliente
       // console.log("Editando en controlador: ", cliente);
 
@@ -74,6 +74,42 @@ const ClientesController = {
       console.error("Error en el controlador al agregar el cliente:", error);
       res.status(500).json({
         mensaje: "Error al agregar el cliente",
+        error: error.message,
+      });
+    }
+  },
+  obtenerRutinas: async (req, res) => {
+    try {
+      const { id } = req.query; // Obtener el id de los parámetros de la URL
+      console.log("ID del cliente controller:", id); // Agregar log para depuración
+      if (!id) {
+        res.status(400).json({ mensaje: "Falta el id del cliente" });
+        return;
+      }
+      const rutinas = await ClientesModelo.obtenerRutinas(id);
+      console.log("Rutinas del cliente:", rutinas); // Agregar log para depuración
+      if (rutinas.length > 0) {
+        res.status(200).json(rutinas);
+      } else {
+        res.status(404).json({ mensaje: "No se encontraron rutinas" });
+      }
+    } catch (error) {
+      console.error("Error en el servidor:", error);
+      res
+        .status(500)
+        .json({ mensaje: "Error en el servidor", error: error.message });
+    }
+  },
+  eliminarCliente: async (req, res) => {
+    try {
+      const { id } = req.query; // ID del cliente desde el cuerpo de la petición
+      // console.log("ID del cliente en controlador:", id); // Agregar log para depuración
+      await ClientesModelo.eliminarCliente(id);
+      res.status(200).json({ mensaje: "Cliente eliminado correctamente" });
+    } catch (error) {
+      // console.error("Error en el controlador al eliminar el cliente:", error);
+      res.status(500).json({
+        mensaje: "Error al eliminar el cliente",
         error: error.message,
       });
     }

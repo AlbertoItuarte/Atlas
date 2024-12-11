@@ -13,7 +13,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EditarUsuario from "../components/EditarUsuario";
 import AgregarCliente from "../components/AgregarCliente";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 export default function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -23,6 +23,7 @@ export default function Clientes() {
   const [buscarNombre, setBuscarNombre] = useState("");
   const [clienteBuscado, setClienteBuscado] = useState([]);
   const [agregarOpen, setAgregarOpen] = useState(false);
+  const router = useRouter();
 
   const fetchClientes = async (coachId) => {
     console.log("Petición GET a /clientes " + coachId + " 1"); // Agregar log para depuración
@@ -57,8 +58,19 @@ export default function Clientes() {
     }
   };
 
+  const storeData = async (id) => {
+    try {
+      await AsyncStorage.setItem("@selected_id", id.toString());
+      router.push(`/Rutinas/${id}`);
+    } catch (e) {
+      console.error("Error storing id:", e);
+    }
+  };
+
   const rutina = (item) => {
     console.log("Rutina de cliente..." + item); // Agregar log para depuración
+    // Agregar navegación a la pantalla de rutinas
+    Link.push("/Rutinas", { clienteId: item });
   };
 
   const buscar = (item) => {
@@ -100,6 +112,12 @@ export default function Clientes() {
     }
   }, [coachId]);
 
+  const actualizar = () => {
+    fetchClientes(coachId);
+    setIsOpened(false);
+    setAgregarOpen(false);
+  };
+
   return (
     <Screen pagina={"Clientes"}>
       <View className="">
@@ -109,7 +127,7 @@ export default function Clientes() {
         />
       </View>
 
-      <View className="flex flex-row pt-4 px-1 space-x-2 justify-around items-center ">
+      <View className="flex flex-row  pt-4 px-1 space-x-2 justify-around items-center ">
         <TextInput
           className="h-10 w-4/12 border-2 bg-white border-gray-300 rounded-md"
           placeholder="Buscar cliente"
@@ -127,15 +145,11 @@ export default function Clientes() {
         </TouchableHighlight>
       </View>
 
-      <EditarUsuario
-        isOpen={isOpened}
-        cliente={cliente}
-        onClose={() => setIsOpened(false)}
-      />
+      <EditarUsuario isOpen={isOpened} cliente={cliente} onClose={actualizar} />
       <AgregarCliente
         isOpen={agregarOpen}
         coachId={coachId}
-        onClose={() => setAgregarOpen(false)}
+        onClose={actualizar}
       />
 
       <View className="flex flex-row justify-between items-center bg-cyan-500 h-10 mt-4">
@@ -148,48 +162,44 @@ export default function Clientes() {
 
       <View className="pb-40 bg-gray-800">
         {!buscarNombre ? (
-          <FlatList
-            data={clientes}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
+          <View>
+            {clientes.map((item, index) => (
               <TouchableHighlight
+                key={index.toString()}
                 onLongPress={() => {
                   editar(item);
                 }}
                 onPress={() => {
-                  rutina(item.Id);
+                  storeData(item.Id);
                 }}
                 className=""
               >
-                <Link href={`/Rutinas/${item.Id}`}>
-                  <View className="flex flex-row justify-between items-center">
-                    <Text className="text-white w-1/5 text-center">
-                      {item.Nombre}
-                    </Text>
-                    <Text className="text-white w-1/5 text-center">
-                      {item.ApellidoP}
-                    </Text>
-                    <Text className="text-white w-1/5 text-center">
-                      {item.Celular}
-                    </Text>
-                    <Text className="text-white w-1/5 text-center">
-                      {item.Correo}
-                    </Text>
-                    <Text className="text-white w-1/5 text-center">
-                      {new Date().getFullYear() -
-                        new Date(item.FechaNac).getFullYear()}
-                    </Text>
-                  </View>
-                </Link>
+                <View className="flex flex-row justify-between items-center">
+                  <Text className="text-white w-1/5 text-center">
+                    {item.Nombre}
+                  </Text>
+                  <Text className="text-white w-1/5 text-center">
+                    {item.ApellidoP}
+                  </Text>
+                  <Text className="text-white w-1/5 text-center">
+                    {item.Celular}
+                  </Text>
+                  <Text className="text-white w-1/5 text-center">
+                    {item.Correo}
+                  </Text>
+                  <Text className="text-white w-1/5 text-center">
+                    {new Date().getFullYear() -
+                      new Date(item.FechaNac).getFullYear()}
+                  </Text>
+                </View>
               </TouchableHighlight>
-            )}
-          />
+            ))}
+          </View>
         ) : (
-          <FlatList
-            data={clienteBuscado}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
+          <View>
+            {clienteBuscado.map((item, index) => (
               <TouchableHighlight
+                key={index.toString()}
                 onLongPress={() => {
                   editar(item);
                 }}
@@ -217,8 +227,8 @@ export default function Clientes() {
                   </Text>
                 </View>
               </TouchableHighlight>
-            )}
-          />
+            ))}
+          </View>
         )}
       </View>
     </Screen>

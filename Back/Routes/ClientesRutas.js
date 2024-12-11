@@ -17,4 +17,10 @@ router.get("/buscar", ClientesController.buscarClientePorNombre);
 // Añadir la ruta para buscar agregar cliente
 router.post("/agregar", ClientesController.agregarCliente);
 
+// Añadir la ruta para eliminar cliente
+router.delete("/eliminar", ClientesController.eliminarCliente);
+
+//Ruta para obtener rutinas de un cliente
+router.get("/rutinas", ClientesController.obtenerRutinas);
+
 export default router;

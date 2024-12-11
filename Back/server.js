@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import loginRoutes from "./Routes/LogInRuta.js";
-import clientesRoutes from "./Routes/ClientesRutas.js"; // Asegúrate de que el nombre del archivo sea correcto
+import clientesRoutes from "./Routes/ClientesRutas.js";
+import ejerciciosRoutes from "./Routes/EjerciciosRutas.js";
+import rutinasclientesRoutes from "./Routes/RutinasClientesRutas.js";
 
 dotenv.config();
 
@@ -21,6 +23,8 @@ app.use(cors({ origin: "*" }));
 
 app.use("/", loginRoutes);
 app.use("/clientes", clientesRoutes);
+app.use("/ejercicios", ejerciciosRoutes);
+app.use("/rutinasclientes", rutinasclientesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
