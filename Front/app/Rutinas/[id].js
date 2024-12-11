@@ -12,6 +12,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import ModificarRutinaUsuario from "../../components/ModificarRutinaUsuario";
+import AgregarEjercicioCliente from "../../components/AgregarEjercicioCliente";
 
 export default function Rutinas() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function Rutinas() {
   const [dia, setDia] = useState("");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedRutina, setSelectedRutina] = useState(null);
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   const getData = async () => {
     try {
@@ -37,7 +39,6 @@ export default function Rutinas() {
     }
     setIsEditOpen(false);
   };
-
   useEffect(() => {
     getData();
   }, []);
@@ -65,6 +66,7 @@ export default function Rutinas() {
 
   const agregarEjercicio = () => {
     console.log("Agregar ejercicio");
+    setIsAddOpen(true);
   };
 
   const modificarRutina = (rutina) => {
@@ -95,14 +97,6 @@ export default function Rutinas() {
     } catch (error) {
       console.error("Error fetching rutinas:", error);
       setMensaje("Error al obtener las rutinas");
-    }
-  };
-
-  const handleLogOut = async () => {
-    try {
-      await AsyncStorage.removeItem("@login_data");
-    } catch (e) {
-      console.error(e);
     }
   };
 
@@ -173,8 +167,17 @@ export default function Rutinas() {
           )}
         </View>
         {mensaje ? (
-          <View className="flex flex-row justify-center items-center h-14 px-4">
-            <Text className="text-white">{mensaje}. No hay rutina</Text>
+          <View className="flex flex-row h-screen justify-center items-center px-4">
+            <Text className="text-white mb-96 text-center">
+              {mensaje}. No hay rutina
+            </Text>
+            <AgregarEjercicioCliente
+              isOpen={isAddOpen}
+              onClose={() => {
+                setIsAddOpen(false);
+                getData();
+              }}
+            />
           </View>
         ) : (
           <View className="flex flex-col h-screen pt-6 ">
@@ -207,8 +210,18 @@ export default function Rutinas() {
               ))}
               <ModificarRutinaUsuario
                 isOpen={isEditOpen}
-                onClose={getData}
+                onClose={() => {
+                  setIsEditOpen(false);
+                  getData();
+                }}
                 rutina={selectedRutina}
+              />
+              <AgregarEjercicioCliente
+                isOpen={isAddOpen}
+                onClose={() => {
+                  setIsAddOpen(false);
+                  getData();
+                }}
               />
             </View>
           </View>
