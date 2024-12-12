@@ -24,6 +24,9 @@ const Cabecera = ({ pagina }) => {
         <Link className="self-center" href="/Clientes">
           <Text className="text-[#41E4F0] text-2xl">Clientes</Text>
         </Link>
+        <Link className="self-center" href="/Horarios">
+          <Text className="text-[#41E4F0] text-2xl">Horario</Text>
+        </Link>
         <Link className="self-center" href="/MisRutinas">
           <Text className="text-[#41E4F0] text-2xl">Rutinas</Text>
         </Link>

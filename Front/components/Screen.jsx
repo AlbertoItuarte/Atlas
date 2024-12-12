@@ -23,7 +23,7 @@ const Screen = ({ children, pagina }) => {
 };
 
 Screen.prototype = {
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
   pagina: PropTypes.string,
 };
 
