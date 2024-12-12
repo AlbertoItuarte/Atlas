@@ -16,7 +16,7 @@ import AgregarEjercicioCliente from "../../components/AgregarEjercicioCliente";
 
 export default function Rutinas() {
   const router = useRouter();
-  const [id, setId] = useState(null);
+  const [id, setId] = useState("");
   const [rutinas, setRutinas] = useState([]);
   const [mensaje, setMensaje] = useState("");
   const [nombreCliente, setNombreCliente] = useState("");
@@ -30,7 +30,8 @@ export default function Rutinas() {
       const value = await AsyncStorage.getItem("@selected_id");
       if (value !== null) {
         setId(value);
-        obtenerRutinas(value); // Llama a obtenerRutinas con el valor correcto de id
+        console.log("ID del cliente en rutinas:", value, "\n\n\n\n\n\n");
+        obtenerRutinas(value);
       } else {
         console.error("No se encontró el id seleccionado");
       }
@@ -88,6 +89,8 @@ export default function Rutinas() {
         }
       );
       if (response.data.length > 0) {
+        setId(id);
+        console.log("ID del cliente en rutinas:", id, "\n\n\n\n\n\n");
         setRutinas(response.data);
         setNombreCliente(response.data[0].Nombre);
         console.log("Rutinas response: ", response.data);
@@ -177,6 +180,7 @@ export default function Rutinas() {
                 setIsAddOpen(false);
                 getData();
               }}
+              id={id}
             />
           </View>
         ) : (
@@ -222,6 +226,7 @@ export default function Rutinas() {
                   setIsAddOpen(false);
                   getData();
                 }}
+                id={id}
               />
             </View>
           </View>

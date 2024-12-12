@@ -114,6 +114,24 @@ const ClientesController = {
       });
     }
   },
+  agregarEjercicio: async (req, res) => {
+    try {
+      const ejercicio = req.body; // Datos del nuevo ejercicio
+      console.log("Ejercicio en controlador:", ejercicio); // Agregar log para depuración
+      const result = await ClientesModelo.agregarEjercicio(ejercicio);
+      if (result) {
+        res.status(201).json({ mensaje: "Ejercicio agregado correctamente" });
+      } else {
+        res.status(400).json({ mensaje: "No se pudo agregar el ejercicio" });
+      }
+    } catch (error) {
+      console.error("Error en el controlador al agregar el ejercicio:", error);
+      res.status(500).json({
+        mensaje: "Error al agregar el ejercicio",
+        error: error.message,
+      });
+    }
+  },
 };
 
 export default ClientesController;

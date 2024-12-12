@@ -5,4 +5,14 @@ const router = expres.Router();
 
 router.get("/", EjerciciosController.obtenerTodosLosEjercicios);
 
+// router.put("/modificar", EjerciciosController.modificarEjercicio);
+
+// router.delete("/eliminar", EjerciciosController.eliminarEjercicio);
+
+router.get("/musculos", EjerciciosController.obtenerMusculos);
+
+router.get("/categorias", EjerciciosController.obtenerCategorias);
+
+router.get("/filtrados", EjerciciosController.obtenerEjerciciosFiltrados);
+
 export default router;

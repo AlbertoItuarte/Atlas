@@ -123,6 +123,26 @@ const ClientesModelo = {
       );
     }
   },
+  agregarEjercicio: async (ejercicio) => {
+    try {
+      const [response] = await db.promise().query(
+        `INSERT INTO RutinasClientes (IdCliente, IdEjercicio, Series, Repeticiones, Dia) 
+          VALUES (?, ?, ?, ?, ?)`,
+        [
+          ejercicio.IdCliente,
+          ejercicio.IdEjercicio,
+          ejercicio.Series,
+          ejercicio.Repeticiones,
+          ejercicio.Dia,
+        ]
+      );
+      // console.log("Ejercicio agregado correctamente en Modelo"); // Agregar log para depuración
+      return true;
+    } catch (error) {
+      // console.error("Error al agregar un ejercicio:", error);
+      throw new Error("Error al agregar un ejercicio: " + error.message);
+    }
+  },
 };
 
 export default ClientesModelo;

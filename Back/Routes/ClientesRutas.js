@@ -23,4 +23,6 @@ router.delete("/eliminar", ClientesController.eliminarCliente);
 //Ruta para obtener rutinas de un cliente
 router.get("/rutinas", ClientesController.obtenerRutinas);
 
+router.post("/agregarejercicio", ClientesController.agregarEjercicio);
+
 export default router;

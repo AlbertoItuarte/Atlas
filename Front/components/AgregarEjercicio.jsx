@@ -5,27 +5,31 @@ import axios from "axios";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
-const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
+const AgregarEjercicio = ({ isOpen, onClose, coachId, id }) => {
   const [nombreEjercicio, setNombreEjercicio] = useState("");
   const [IdMusculoObjetivo, setIdMusculoObjetivo] = useState("");
   const [IdCategoriaEjercicio, setIdCategoriaEjercicio] = useState("");
   const [musculos, setMusculos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [ejercicios, setEjercicios] = useState([]);
-  const [series, setSeries] = useState("");
-  const [repeticiones, setRepeticiones] = useState("");
-  const [dia, setDia] = useState("");
 
   const insets = useSafeAreaInsets();
 
   const handleAdd = async () => {
     console.log("IdUsuario:", id);
-    console.log("IdEjercicio:", nombreEjercicio);
-    console.log("Series:", series);
-    console.log("Repeticiones:", repeticiones);
-    console.log("Dia:", dia);
+    console.log("Agregar ejercicio; nombreEjercicio:", nombreEjercicio);
+    console.log("Agregar ejercicio; IdMusculoObjetivo:", IdMusculoObjetivo);
+    console.log(
+      "Agregar ejercicio; IdCategoriaEjercicio:",
+      IdCategoriaEjercicio
+    );
     try {
-      if (nombreEjercicio === "" || series === "" || repeticiones === "") {
+      if (
+        nombreEjercicio === "" ||
+        IdMusculoObjetivo === "" ||
+        IdCategoriaEjercicio === "" ||
+        coachId === ""
+      ) {
         console.log("Faltan datos \n");
         alert("Rellena todos los datos");
         return;
@@ -33,11 +37,9 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
       const response = await axios.post(
         `http://192.168.1.75:5000/clientes/agregarejercicio`,
         {
-          IdCliente: id,
-          IdEjercicio: nombreEjercicio,
-          Series: series,
-          Repeticiones: repeticiones,
-          Dia: dia,
+          IdCliente: nombreEjercicio,
+          IdMusculoObjetivo,
+          IdCategoriaEjercicio,
         }
       );
       console.log("Ejercicio agregado correctamente", response.data);
@@ -113,9 +115,6 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
     setNombreEjercicio("");
     setIdMusculoObjetivo("");
     setIdCategoriaEjercicio("");
-    setSeries("");
-    setRepeticiones("");
-    setDia("");
     onClose();
   };
 
@@ -133,20 +132,6 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
         </Pressable>
       </View>
       <View className="flex space-y-4 w-full items-center pt-6">
-        <View className="flex flex-row items-center w-full">
-          <Text className="text-cyan-300 text-xl w-4/12">Series: </Text>
-          <TextInput
-            onChangeText={setSeries}
-            className="text-black rounded-md pl-2 bg-gray-300 w-8/12"
-          />
-        </View>
-        <View className="flex flex-row items-center w-full">
-          <Text className="text-cyan-300 text-xl w-4/12">Reps: </Text>
-          <TextInput
-            onChangeText={setRepeticiones}
-            className="text-black rounded-md pl-2 bg-gray-300 w-8/12"
-          />
-        </View>
         <View className="flex flex-row items-center w-full">
           <Text className="text-cyan-300 text-xl w-4/12">
             Categoría Ejercicio:{" "}
@@ -239,30 +224,6 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
           )}
         </Picker>
       </View>
-      <View className="flex flex-row items-center w-full">
-        <Text className="text-cyan-300 text-xl w-4/12">Día: </Text>
-        <Picker
-          selectedValue={""}
-          style={{
-            height: 55,
-            width: 200,
-            backgroundColor: "white",
-            borderColor: "black",
-          }}
-          onValueChange={(itemValue) => {
-            setDia(itemValue);
-          }}
-        >
-          <Picker.Item label="Seleccione un día" value="" />
-          <Picker.Item label="Lunes" value="Lunes" />
-          <Picker.Item label="Martes" value="Martes" />
-          <Picker.Item label="Miércoles" value="Miércoles" />
-          <Picker.Item label="Jueves" value="Jueves" />
-          <Picker.Item label="Viernes" value="Viernes" />
-          <Picker.Item label="Sábado" value="Sábado" />
-        </Picker>
-      </View>
-
       <Pressable
         onPress={handleAdd}
         className="bg-cyan-400 rounded-md px-6 py-4"
@@ -273,4 +234,4 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
   );
 };
 
-export default AgregarEjercicioCliente;
+export default AgregarEjercicio;
