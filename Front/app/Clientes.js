@@ -198,8 +198,24 @@ export default function Clientes() {
           source={require("../assets/Clientes.png")}
         />
       </View>
+      <View
+        className={`h-screen ${isOpened || agregarOpen ? "block" : " hidden"}`}
+      >
+        <EditarUsuario
+          isOpen={isOpened}
+          cliente={cliente}
+          onClose={actualizar}
+        />
+        <AgregarCliente
+          isOpen={agregarOpen}
+          coachId={coachId}
+          onClose={actualizar}
+        />
+      </View>
 
-      <View className="flex flex-row  pt-4 px-1 space-x-2 justify-around items-center ">
+      <View
+        className={`flex ${isOpened || agregarOpen ? "hidden" : " flex-row"}   pt-4 px-1 space-x-2 justify-around items-center `}
+      >
         <TextInput
           className="h-10 w-4/12 border-2 bg-white border-gray-300 rounded-md"
           placeholder="Buscar cliente"
@@ -217,7 +233,9 @@ export default function Clientes() {
         </TouchableHighlight>
       </View>
 
-      <View className="flex flex-row justify-between items-center bg-cyan-500 h-10 mt-4">
+      <View
+        className={`flex${isOpened || agregarOpen ? "hidden" : " flex-row"} justify-between items-center bg-cyan-500 h-10 mt-4`}
+      >
         <Text className="text-white w-1/5 text-center">Nombre</Text>
         <Text className="text-white w-1/5 text-center">Apellido</Text>
         <Text className="text-white w-1/5 text-center">Telefono</Text>
@@ -225,20 +243,8 @@ export default function Clientes() {
         <Text className="text-white w-1/5 text-center">Edad</Text>
       </View>
       <View
-        className={`bg-black h-full ${isOpened || agregarOpen ? "block" : "hidden"}`}
+        className={`pb-40 ${isOpened || agregarOpen ? "hidden" : null} bg-gray-800`}
       >
-        <EditarUsuario
-          isOpen={isOpened}
-          cliente={cliente}
-          onClose={actualizar}
-        />
-        <AgregarCliente
-          isOpen={agregarOpen}
-          coachId={coachId}
-          onClose={actualizar}
-        />
-      </View>
-      <View className="pb-40 bg-gray-800">
         {!buscarNombre ? (
           <View>
             {clientes.map((item, index) => (
