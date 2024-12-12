@@ -162,7 +162,7 @@ export default function Clientes() {
       `;
 
       const { uri } = await Print.printToFileAsync({ html: htmlContent });
-      console.log("PDF generado en:", uri);
+      // console.log("PDF generado en:", uri);
 
       // Define la ruta personalizada
       const newUri = `${FileSystem.documentDirectory}clientes/lista_clientes.pdf`;
@@ -176,8 +176,8 @@ export default function Clientes() {
         to: newUri,
       });
 
-      console.log("PDF movido a:", newUri);
-      alert(`PDF generado en: ${newUri}`);
+      // console.log("PDF movido a:", newUri);
+      // alert(`PDF generado en: ${newUri}`);
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(newUri);
