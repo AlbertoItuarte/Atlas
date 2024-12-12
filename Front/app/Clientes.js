@@ -5,7 +5,7 @@ import {
   Image,
   TextInput,
   TouchableHighlight,
-  FlatList,
+  Button,
 } from "react-native";
 import Screen from "../components/Screen";
 import { useEffect, useState } from "react";
@@ -14,6 +14,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import EditarUsuario from "../components/EditarUsuario";
 import AgregarCliente from "../components/AgregarCliente";
 import { Link, useRouter } from "expo-router";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system";
 
 export default function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -118,6 +121,75 @@ export default function Clientes() {
     setAgregarOpen(false);
   };
 
+  const ensureDirExists = async (dir) => {
+    const dirInfo = await FileSystem.getInfoAsync(dir);
+    if (!dirInfo.exists) {
+      await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+    }
+  };
+
+  const generarPDF = async () => {
+    try {
+      console.log("Generando PDF...");
+      let htmlContent = `
+        <h1>Lista de Clientes</h1>
+        <table border="1" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Telefono</th>
+              <th>Correo</th>
+              <th>Edad</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${clientes
+              .map(
+                (cliente) => `
+              <tr>
+                <td>${cliente.Nombre}</td>
+                <td>${cliente.ApellidoP}</td>
+                <td>${cliente.Celular}</td>
+                <td>${cliente.Correo}</td>
+                <td>${new Date().getFullYear() - new Date(cliente.FechaNac).getFullYear()}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      `;
+
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      console.log("PDF generado en:", uri);
+
+      // Define la ruta personalizada
+      const newUri = `${FileSystem.documentDirectory}clientes/lista_clientes.pdf`;
+
+      // Asegúrate de que el directorio exista
+      await ensureDirExists(`${FileSystem.documentDirectory}clientes`);
+
+      // Mueve el archivo a la nueva ubicación
+      await FileSystem.moveAsync({
+        from: uri,
+        to: newUri,
+      });
+
+      console.log("PDF movido a:", newUri);
+      alert(`PDF generado en: ${newUri}`);
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(newUri);
+      } else {
+        alert("La función de compartir no está disponible en este dispositivo");
+      }
+    } catch (error) {
+      console.error("Error al generar el PDF:", error);
+      alert("Error al generar el PDF");
+    }
+  };
+
   return (
     <Screen pagina={"Clientes"}>
       <View className="">
@@ -200,6 +272,7 @@ export default function Clientes() {
                 </View>
               </TouchableHighlight>
             ))}
+            <Button title="Generar PDF" onPress={generarPDF} />
           </View>
         ) : (
           <View>
