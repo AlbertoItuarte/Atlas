@@ -122,7 +122,7 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
   return (
     <View
       style={{ paddingTop: insets.top + 20 }}
-      className={`flex justify-center space-y-6 h-screen items-center bg-black ${isOpen ? "absolute -top-32 h-full bottom-0 left-0 w-screen z-50" : "hidden"}`}
+      className={`flex justify-center space-y-6 items-center bg-black ${isOpen ? "absolute -top-80 h-full bottom-0 -left-40 w-full z-50" : "hidden"}`}
     >
       <View className="flex flex-row w-full justify-between items-center">
         <Text className="text-cyan-300 text-2xl">

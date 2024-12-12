@@ -8,11 +8,15 @@ import {
   View,
   TouchableHighlight,
   Image,
+  Button,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import ModificarRutinaUsuario from "../../components/ModificarRutinaUsuario";
 import AgregarEjercicioCliente from "../../components/AgregarEjercicioCliente";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system";
 
 export default function Rutinas() {
   const router = useRouter();
@@ -76,6 +80,12 @@ export default function Rutinas() {
     setIsEditOpen(true);
   };
 
+  const manejarCierre = () => {
+    setIsEditOpen(false);
+    setIsAddOpen(false);
+    getData();
+  };
+
   const rutinasFiltradas = dia
     ? rutinas.filter((rutina) => rutina.Dia === dia)
     : rutinas;
@@ -103,12 +113,96 @@ export default function Rutinas() {
     }
   };
 
+  const ensureDirExists = async (dir) => {
+    const dirInfo = await FileSystem.getInfoAsync(dir);
+    if (!dirInfo.exists) {
+      await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+    }
+  };
+
+  const generarPDF = async (rutinasFiltradas) => {
+    try {
+      console.log("Generando PDF...");
+      let htmlContent = `
+        <h1>Rutinas de ${nombreCliente}</h1>
+        <table border="1" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>Ejercicio</th>
+              <th>Series</th>
+              <th>Reps</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rutinasFiltradas
+              .map(
+                (rutina) => `
+              <tr>
+                <td>${rutina.Ejercicio}</td>
+                <td>${rutina.Series}</td>
+                <td>${rutina.Repeticiones}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      `;
+
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      // console.log("PDF generado en:", uri);
+
+      // Define la ruta personalizada
+      const newUri = `${FileSystem.documentDirectory}rutinas/${nombreCliente}_rutinas.pdf`;
+
+      // Asegúrate de que el directorio exista
+      await ensureDirExists(`${FileSystem.documentDirectory}rutinas`);
+
+      // Mueve el archivo a la nueva ubicación
+      await FileSystem.moveAsync({
+        from: uri,
+        to: newUri,
+      });
+
+      // console.log("PDF movido a:", newUri);
+      // alert(`PDF generado en: ${newUri}`);
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(newUri);
+      } else {
+        alert("La función de compartir no está disponible en este dispositivo");
+      }
+    } catch (error) {
+      console.error("Error al generar el PDF:", error);
+      alert("Error al generar el PDF");
+    }
+  };
+
   return (
     <Screen pagina={"Rutinas"}>
       <ScrollView className="">
         <View className="flex flex-col  justify-center items-center px-4">
           <Image source={require("../../assets/Rutinas.png")} />
-
+          <View
+            className={`bg-black h-full mt-40 w-scren  ${isEditOpen || isAddOpen ? "block" : "hidden"}`}
+          >
+            <ModificarRutinaUsuario
+              isOpen={isEditOpen}
+              onClose={() => {
+                manejarCierre();
+                getData();
+              }}
+              rutina={selectedRutina}
+            />
+            <AgregarEjercicioCliente
+              isOpen={isAddOpen}
+              onClose={() => {
+                manejarCierre();
+                getData();
+              }}
+              id={id}
+            />
+          </View>
           {id ? (
             <View className="flex flex-col mt-4 rounded justify-center items-center w-screen">
               <View className="flex flex-row  justify-around rounded-3xl items-center w-screen bg-gray-700  ">
@@ -155,12 +249,12 @@ export default function Rutinas() {
                   Rutinas de {nombreCliente}
                 </Text>
                 <TouchableHighlight
-                  className="bg-cyan-500 rounded-2xl "
+                  className="bg-cyan-500 mt-4 rounded-2xl "
                   onPress={agregarEjercicio}
                 >
-                  <View className="flex flex-row justify-center items-center h-14 px-4">
+                  <View className="flex flex-row justify-center items-center h-10 px-2">
                     <Image source={require("../../assets/Añadir.png")} />
-                    <Text className="text-white">Agregar ejercicio</Text>
+                    <Text className="text-white">Ejercicio</Text>
                   </View>
                 </TouchableHighlight>
               </View>
@@ -174,14 +268,6 @@ export default function Rutinas() {
             <Text className="text-white mb-96 text-center">
               {mensaje}. No hay rutina
             </Text>
-            <AgregarEjercicioCliente
-              isOpen={isAddOpen}
-              onClose={() => {
-                setIsAddOpen(false);
-                getData();
-              }}
-              id={id}
-            />
           </View>
         ) : (
           <View className="flex flex-col h-screen pt-6 ">
@@ -212,21 +298,9 @@ export default function Rutinas() {
                   </View>
                 </TouchableHighlight>
               ))}
-              <ModificarRutinaUsuario
-                isOpen={isEditOpen}
-                onClose={() => {
-                  setIsEditOpen(false);
-                  getData();
-                }}
-                rutina={selectedRutina}
-              />
-              <AgregarEjercicioCliente
-                isOpen={isAddOpen}
-                onClose={() => {
-                  setIsAddOpen(false);
-                  getData();
-                }}
-                id={id}
+              <Button
+                title="Generar PDF"
+                onPress={() => generarPDF(rutinasFiltradas)}
               />
             </View>
           </View>

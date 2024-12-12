@@ -145,13 +145,6 @@ export default function Clientes() {
         </TouchableHighlight>
       </View>
 
-      <EditarUsuario isOpen={isOpened} cliente={cliente} onClose={actualizar} />
-      <AgregarCliente
-        isOpen={agregarOpen}
-        coachId={coachId}
-        onClose={actualizar}
-      />
-
       <View className="flex flex-row justify-between items-center bg-cyan-500 h-10 mt-4">
         <Text className="text-white w-1/5 text-center">Nombre</Text>
         <Text className="text-white w-1/5 text-center">Apellido</Text>
@@ -159,7 +152,20 @@ export default function Clientes() {
         <Text className="text-white w-1/5 text-center">Correo</Text>
         <Text className="text-white w-1/5 text-center">Edad</Text>
       </View>
-
+      <View
+        className={`bg-black h-full ${isOpened || agregarOpen ? "block" : "hidden"}`}
+      >
+        <EditarUsuario
+          isOpen={isOpened}
+          cliente={cliente}
+          onClose={actualizar}
+        />
+        <AgregarCliente
+          isOpen={agregarOpen}
+          coachId={coachId}
+          onClose={actualizar}
+        />
+      </View>
       <View className="pb-40 bg-gray-800">
         {!buscarNombre ? (
           <View>

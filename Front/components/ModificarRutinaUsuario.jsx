@@ -67,7 +67,7 @@ const EditarEjercicio = ({ isOpen, onClose, rutina }) => {
   return (
     <View
       style={{ paddingTop: insets.top + 20 }}
-      className={`flex justify-center space-y-6 h-screen items-center bg-black ${isOpen ? "absolute -top-36 bottom-0 left-0 h-full w-screen z-50" : "hidden"}`}
+      className={`flex justify-center space-y-6 h-screen items-center bg-black ${isOpen ? "absolute -top-80 bottom-0 left-0 h-screen w-screen z-50" : "hidden"}`}
     >
       <View className="flex flex-row space-x-32">
         <Text className="text-white text-2xl">Editar Ejercicio </Text>

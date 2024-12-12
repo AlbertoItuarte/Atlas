@@ -92,7 +92,7 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
   return (
     <View
       style={{ paddingTop: insets.top + 20 }}
-      className={`flex justify-center space-y-6 h-screen items-center bg-black ${isOpen ? "absolute -top-36 bottom-0 left-0 h-full w-screen z-50" : "hidden"}`}
+      className={`flex justify-center space-y-6 h-screen items-center bg-black ${isOpen ? "absolute -top-24 bottom-0 bg-black left-0 h-screen w-screen z-50" : "hidden"}`}
     >
       <Confirmacion
         isOpen={isOpened}
