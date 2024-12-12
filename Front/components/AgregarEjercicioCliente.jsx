@@ -136,6 +136,7 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
         <View className="flex flex-row items-center w-full">
           <Text className="text-cyan-300 text-xl w-4/12">Series: </Text>
           <TextInput
+            value={series}
             onChangeText={setSeries}
             className="text-black rounded-md pl-2 bg-gray-300 w-8/12"
           />
@@ -143,6 +144,7 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
         <View className="flex flex-row items-center w-full">
           <Text className="text-cyan-300 text-xl w-4/12">Reps: </Text>
           <TextInput
+            value={repeticiones}
             onChangeText={setRepeticiones}
             className="text-black rounded-md pl-2 bg-gray-300 w-8/12"
           />
@@ -242,7 +244,7 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
       <View className="flex flex-row items-center w-full">
         <Text className="text-cyan-300 text-xl w-4/12">Día: </Text>
         <Picker
-          selectedValue={""}
+          selectedValue={dia}
           style={{
             height: 55,
             width: 200,
