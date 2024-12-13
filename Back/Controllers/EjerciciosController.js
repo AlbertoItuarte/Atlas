@@ -82,6 +82,59 @@ const EjerciciosController = {
         .json({ mensaje: "Error en el servidor", error: error.message });
     }
   },
+  agregarEjercicio: async (req, res) => {
+    try {
+      console.log("Agregando ejercicio controller", req.body);
+      const ejercicio = req.body;
+      const nuevoEjercicio = await EjerciciosModelo.agregarEjercicio(ejercicio);
+      if (nuevoEjercicio) {
+        res.status(201).json(nuevoEjercicio);
+      } else {
+        res.status(400).json({ mensaje: "Error al agregar el ejercicio" });
+      }
+    } catch (error) {
+      console.error("Error en el servidor:", error);
+      res
+        .status(500)
+        .json({ mensaje: "Error en el servidor", error: error.message });
+    }
+  },
+  modificarEjercicio: async (req, res) => {
+    try {
+      console.log("Modificando ejercicio controller", req.body);
+      const ejercicio = req.body;
+      const ejercicioModificado = await EjerciciosModelo.modificarEjercicio(
+        ejercicio
+      );
+      if (ejercicioModificado) {
+        res.status(200).json(ejercicioModificado);
+      } else {
+        res.status(400).json({ mensaje: "Error al modificar el ejercicio" });
+      }
+    } catch (error) {
+      console.error("Error en el servidor:", error);
+      res
+        .status(500)
+        .json({ mensaje: "Error en el servidor", error: error.message });
+    }
+  },
+  eliminarEjercicio: async (req, res) => {
+    try {
+      console.log("Eliminando ejercicio controller", req.query);
+      const { id } = req.query;
+      const ejercicioEliminado = await EjerciciosModelo.eliminarEjercicio(id);
+      if (ejercicioEliminado) {
+        res.status(200).json(ejercicioEliminado);
+      } else {
+        res.status(400).json({ mensaje: "Error al eliminar el ejercicio" });
+      }
+    } catch (error) {
+      console.error("Error en el servidor:", error);
+      res
+        .status(500)
+        .json({ mensaje: "Error en el servidor", error: error.message });
+    }
+  },
 };
 
 export default EjerciciosController;

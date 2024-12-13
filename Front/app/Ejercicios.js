@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AgregarEjercicioCoach from "../components/AgregarEjercicioCoach";
+import ModificarEjercicioCoach from "../components/ModificarEjercicioCoach";
 
 export default function Ejercicios() {
   const [ejercicios, setEjercicios] = useState([]);
@@ -15,6 +16,8 @@ export default function Ejercicios() {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("all");
   const [musculoSeleccionado, setMusculoSeleccionado] = useState("all");
   const [isOpen, setIsOpen] = useState(false);
+  const [editarOpen, setEditarOpen] = useState(false);
+  const [ejercicioEditar, setEjercicoEditar] = useState(null);
 
   const getData = async () => {
     try {
@@ -94,27 +97,31 @@ export default function Ejercicios() {
   };
 
   const onClose = () => {
+    fetchEjercicios(coachId);
+    setEditarOpen(false);
     setIsOpen(false);
   };
 
   return (
     <Screen pagina={"Ejercicios"}>
+      <ModificarEjercicioCoach
+        isOpen={editarOpen}
+        onClose={onClose}
+        ejercicio={ejercicioEditar}
+      />
       <AgregarEjercicioCoach
         isOpen={isOpen}
         onClose={onClose}
         ejercicios={ejercicios}
-        setEjercicios={setEjercicios}
-        categorias={categorias}
-        musculos={musculos}
         coachId={coachId}
       />
       <View
-        className={`${!isOpen ? "flex justify-center items-center bg-cyan-500 h-10 mt-4" : "hidden"}`}
+        className={`${isOpen || editarOpen ? "hidden" : "flex justify-center items-center bg-cyan-500 h-10 mt-4"}`}
       >
-        <Text className="text-white">Ejercicios de {nombreCoach}</Text>
+        <Text className="text-white text-2xl">Ejercicios de {nombreCoach}</Text>
       </View>
       <View
-        className={`${!isOpen ? "flex flex-row justify-between items-center bg-cyan-500 h-10 mt-4" : "hidden"}`}
+        className={`${isOpen || editarOpen ? "hidden" : "flex flex-row justify-between items-center bg-cyan-500 h-10 mt-4"}`}
       >
         <Picker
           selectedValue={categoriaSeleccionada}
@@ -144,13 +151,13 @@ export default function Ejercicios() {
         </Picker>
       </View>
       <View
-        className={`${!isOpen ? "flex justify-center items-center bg-cyan-500 h-10 mt-4" : "hidden"}`}
+        className={`${isOpen || editarOpen ? "hidden" : "flex justify-center items-center bg-cyan-500 h-10 mt-4"}`}
       >
         <TouchableHighlight onPress={() => setIsOpen(true)}>
           <Text className="text-white">Agregar Ejercicio</Text>
         </TouchableHighlight>
       </View>
-      <ScrollView className={`${!isOpen ? "pb-20" : "hidden"}`}>
+      <ScrollView className={`${isOpen || editarOpen ? "hidden" : "pb-20"}`}>
         <View className="flex flex-row justify-between items-center bg-cyan-500 h-10 mt-4">
           <Text className="text-white w-5/12 text-center">Ejercicio</Text>
           <Text className="text-white w-3/12 text-center">Categoría</Text>
@@ -158,16 +165,17 @@ export default function Ejercicios() {
             Músculo Objetivo
           </Text>
         </View>
-        <View className={`${!isOpen ? "pb-40 bg-gray-800" : "hidden"}`}>
+        <View
+          className={`${isOpen || editarOpen ? "hidden" : "pb-40 bg-gray-800"}`}
+        >
           {filtrarEjercicios().length > 0 ? (
             filtrarEjercicios().map((ejercicio, index) => (
               <TouchableHighlight
                 key={index.toString()}
                 onLongPress={() => {
-                  // Aquí puedes agregar la función para editar el ejercicio
-                }}
-                onPress={() => {
-                  // Aquí puedes agregar la función para almacenar datos del ejercicio
+                  setEjercicoEditar(ejercicio);
+                  console.log("Editar ejercicio:", ejercicioEditar);
+                  setEditarOpen(true);
                 }}
                 className=""
               >
@@ -186,7 +194,7 @@ export default function Ejercicios() {
             ))
           ) : (
             <View
-              className={`${!isOpen ? "flex justify-center items-center" : "hidden"}`}
+              className={`${isOpen || editarOpen ? "hidden" : "flex justify-center items-center"}`}
             >
               <Text className="text-white">Obteniendo ejercicios...</Text>
             </View>

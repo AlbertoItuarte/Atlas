@@ -4,99 +4,115 @@ import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const AgregarEjercicioCoach = ({ isOpen, onClose, ejercicios, coachId }) => {
+const ModificarEjercicioCoach = ({ isOpen, onClose, ejercicio }) => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("all");
   const [musculoSeleccionado, setMusculoSeleccionado] = useState("all");
   const [nombreEjercicio, setNombreEjercicio] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [musculosFiltrados, setMusculosFiltrados] = useState([]);
-  const [ejerciciosFiltrados, setEjerciciosFiltrados] = useState([]);
 
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    const categoriasUnicas = Array.from(
-      new Set(ejercicios.map((ejercicio) => ejercicio.Categoria))
-    ).map((categoria) => {
-      return {
-        Id: ejercicios.find((ejercicio) => ejercicio.Categoria === categoria)
-          .IdCategoriaEjercicio,
-        Categoria: categoria,
-      };
-    });
-    setCategorias(categoriasUnicas);
-  }, [ejercicios]);
+    if (ejercicio) {
+      setCategoriaSeleccionada(ejercicio.IdCategoriaEjercicio);
+      setMusculoSeleccionado(ejercicio.IdMusculoObjetivo);
+      setNombreEjercicio(ejercicio.Ejercicio);
+    }
+  }, [ejercicio]);
 
   useEffect(() => {
-    console.log("Categoría seleccionada:", categoriaSeleccionada);
-    if (categoriaSeleccionada !== "all") {
-      const musculosFiltrados = ejercicios
-        .filter(
-          (ejercicio) =>
-            ejercicio.IdCategoriaEjercicio === parseInt(categoriaSeleccionada)
-        )
-        .map((ejercicio) => ({
-          Id: ejercicio.IdMusculoObjetivo,
-          MusculoObjetivo: ejercicio.MusculoObjetivo,
-        }));
-      setMusculosFiltrados(
-        [...new Set(musculosFiltrados.map((m) => m.Id))].map((id) =>
-          musculosFiltrados.find((m) => m.Id === id)
-        )
-      );
-      setMusculoSeleccionado("all"); // Resetear el músculo seleccionado
-    } else {
-      setMusculoSeleccionado("all"); // Resetear el músculo seleccionado
-      setMusculosFiltrados([]);
+    if (ejercicio) {
+      const categoriasUnicas = Array.from(
+        new Set([ejercicio].map((ej) => ej.Categoria))
+      ).map((categoria) => {
+        return {
+          Id: [ejercicio].find((ej) => ej.Categoria === categoria)
+            .IdCategoriaEjercicio,
+          Categoria: categoria,
+        };
+      });
+      setCategorias(categoriasUnicas);
     }
-  }, [categoriaSeleccionada, ejercicios]);
+  }, [ejercicio]);
 
   useEffect(() => {
-    if (musculoSeleccionado !== "all") {
-      const filtrados = ejercicios.filter(
-        (ejercicio) =>
-          ejercicio.IdMusculoObjetivo === parseInt(musculoSeleccionado)
-      );
-      setEjerciciosFiltrados(filtrados);
-    } else {
-      setEjerciciosFiltrados([]);
-    }
-  }, [musculoSeleccionado, ejercicios]);
-
-  const agregarEjercicio = async () => {
-    try {
-      console.log("Agregando ejercicio:", nombreEjercicio);
+    if (ejercicio) {
       console.log("Categoría seleccionada:", categoriaSeleccionada);
-      console.log("Músculo seleccionado:", musculoSeleccionado);
-      console.log("Coach ID:", coachId);
+      if (categoriaSeleccionada !== "all") {
+        const musculosFiltrados = [ejercicio]
+          .filter(
+            (ej) => ej.IdCategoriaEjercicio === parseInt(categoriaSeleccionada)
+          )
+          .map((ej) => ({
+            Id: ej.IdMusculoObjetivo,
+            MusculoObjetivo: ej.MusculoObjetivo,
+          }));
+        setMusculosFiltrados(
+          [...new Set(musculosFiltrados.map((m) => m.Id))].map((id) =>
+            musculosFiltrados.find((m) => m.Id === id)
+          )
+        );
+        setMusculoSeleccionado("all"); // Resetear el músculo seleccionado
+      } else {
+        setMusculoSeleccionado("all"); // Resetear el músculo seleccionado
+        setMusculosFiltrados([]);
+      }
+    }
+  }, [categoriaSeleccionada, ejercicio]);
 
-      if (
-        !nombreEjercicio ||
-        categoriaSeleccionada === "all" ||
-        musculoSeleccionado === "all"
-      ) {
+  const handleDelete = async () => {
+    try {
+      console.log("Eliminando ejercicio:", ejercicio.Id);
+      const response = await axios.delete(
+        `http://192.168.1.75:5000/ejercicios/eliminar/`,
+        {
+          params: {
+            id: ejercicio.Id,
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log("Ejercicio eliminado:", response.data);
+        manejarCierre();
+      } else {
+        console.error("Error al eliminar el ejercicio");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el ejercicio:", error);
+    }
+  };
+
+  const modificarEjercicio = async () => {
+    try {
+      console.log("Modificando ejercicio:", nombreEjercicio);
+      // console.log("Categoría seleccionada:", categoriaSeleccionada);
+      // console.log("Músculo seleccionado:", musculoSeleccionado);
+      console.log("Ejercicio ID:", ejercicio.Id);
+
+      if (!nombreEjercicio) {
         console.error("Faltan datos");
         alert("Faltan datos");
         return;
       }
 
-      const response = await axios.post(
-        "http://192.168.1.75:5000/ejercicios/agregar",
+      const response = await axios.put(
+        `http://192.168.1.75:5000/ejercicios/modificar/`,
         {
+          Id: ejercicio.Id,
           Ejercicio: nombreEjercicio,
-          IdCategoriaEjercicio: parseInt(categoriaSeleccionada),
-          IdMusculoObjetivo: parseInt(musculoSeleccionado),
-          IdCoach: coachId,
+          // IdMusculoObjetivo: parseInt(musculoSeleccionado),
+          // IdCategoriaEjercicio: parseInt(categoriaSeleccionada),
         }
       );
-      if (response.status === 201) {
-        console.log("Ejercicio agregado:", response.data);
-        onClose();
+      if (response.status === 200) {
+        console.log("Ejercicio modificado:", response.data);
+        manejarCierre();
       } else {
-        console.error("Error al agregar el ejercicio");
+        console.error("Error al modificar el ejercicio");
       }
     } catch (error) {
-      console.error("Error al agregar el ejercicio:", error);
+      console.error("Error al modificar el ejercicio:", error);
     }
   };
 
@@ -110,17 +126,19 @@ const AgregarEjercicioCoach = ({ isOpen, onClose, ejercicios, coachId }) => {
   return (
     <View
       style={{ paddingTop: insets.top + 20 }}
-      className={`flex justify-center space-y-6 items-center bg-black ${isOpen ? " -top-36 h-screen   w-full z-50" : "hidden"}`}
+      className={`flex justify-center space-y-6 items-center bg-black ${isOpen ? " -top-36  h-screen   w-full z-50" : "hidden"}`}
     >
       <View className="flex flex-row w-full justify-between items-center">
-        <Text className="text-cyan-300 text-2xl">Agregar Ejercicio Coach</Text>
+        <Text className="text-cyan-300 text-2xl">
+          Modificar Ejercicio Coach
+        </Text>
         <Pressable onPress={manejarCierre} className="">
           <Image source={require("../assets/Salir.png")} alt="Salir" />
         </Pressable>
       </View>
       <View className="flex space-y-4 w-full items-center pt-6">
-        <View className="flex flex-row items-center w-full">
-          <Text className="text-cyan-300 text-xl w-4/12">Categoría: </Text>
+        {/* <View className="flex flex-row items-center w-full"> */}
+        {/* <Text className="text-cyan-300 text-xl w-4/12">Categoría: </Text>
           <Picker
             selectedValue={categoriaSeleccionada}
             style={{
@@ -168,7 +186,7 @@ const AgregarEjercicioCoach = ({ isOpen, onClose, ejercicios, coachId }) => {
               />
             ))}
           </Picker>
-        </View>
+        </View> */}
         <View className="flex flex-row items-center w-full">
           <Text className="text-cyan-300 text-xl w-4/12">Ejercicio: </Text>
           <TextInput
@@ -179,19 +197,19 @@ const AgregarEjercicioCoach = ({ isOpen, onClose, ejercicios, coachId }) => {
         </View>
       </View>
       <Pressable
-        onPress={agregarEjercicio}
+        onPress={modificarEjercicio}
         className="bg-cyan-400 rounded-md px-6 py-4"
       >
-        <Text className="text-white font-bold">Agregar Ejercicio</Text>
+        <Text className="text-white font-bold">Modificar Ejercicio</Text>
       </Pressable>
       <Pressable
-        onPress={manejarCierre}
+        onPress={handleDelete}
         className="bg-red-400 rounded-md px-6 py-4 mt-4"
       >
-        <Text className="text-white font-bold">Cerrar</Text>
+        <Text className="text-white font-bold">Eliminar</Text>
       </Pressable>
     </View>
   );
 };
 
-export default AgregarEjercicioCoach;
+export default ModificarEjercicioCoach;

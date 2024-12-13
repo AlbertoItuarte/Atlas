@@ -68,6 +68,58 @@ const EjerciciosModelo = {
       );
     }
   },
+  agregarEjercicio: async (ejercicio) => {
+    try {
+      console.log("Agregando ejercicio en modelo:", ejercicio);
+      const { Ejercicio, IdCategoriaEjercicio, IdMusculoObjetivo, IdCoach } =
+        ejercicio;
+      console.log("Agregando ejercicio en modelo:", ejercicio);
+
+      const [response] = await db
+        .promise()
+        .query(
+          "INSERT INTO Ejercicios (Ejercicio, IdCategoriaEjercicio, IdMusculoObjetivo, IdCoach) VALUES (?, ?, ?, ?)",
+          [Ejercicio, IdCategoriaEjercicio, IdMusculoObjetivo, IdCoach]
+        );
+      console.log(response);
+
+      return response;
+    } catch (error) {
+      throw new Error("Error al agregar el ejercicio: " + error.message);
+    }
+  },
+  modificarEjercicio: async (ejercicio) => {
+    try {
+      console.log("Modificando ejercicio en modelo:", ejercicio);
+      const { Id, Ejercicio } = ejercicio;
+      const [response] = await db
+        .promise()
+        .query("UPDATE Ejercicios SET Ejercicio = ? WHERE Id = ?", [
+          Ejercicio,
+          // IdMusculoObjetivo,
+          // IdCategoriaEjercicio,
+          Id,
+        ]);
+      // , IdCategoriaEjercicio, IdMusculoObjetivo
+      // , IdCategoriaEjercicio = ?, IdMusculoObjetivo = ?
+      console.log(response);
+      return response;
+    } catch (error) {
+      throw new Error("Error al modificar el ejercicio: " + error.message);
+    }
+  },
+  eliminarEjercicio: async (id) => {
+    try {
+      console.log("Eliminando ejercicio en modelo:", id);
+      const [response] = await db
+        .promise()
+        .query("DELETE FROM Ejercicios WHERE Id = ?", [id]);
+      console.log(response);
+      return response;
+    } catch (error) {
+      throw new Error("Error al eliminar el ejercicio: " + error.message);
+    }
+  },
 };
 
 export default EjerciciosModelo;
