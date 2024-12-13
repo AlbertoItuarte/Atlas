@@ -4,9 +4,19 @@ const EjerciciosModelo = {
   obtenerTodosLosEjercicios: async (id) => {
     try {
       console.log("Obteniendo ejercicios para el coach con id en modelo:", id);
-      const [response] = await db
-        .promise()
-        .query("SELECT * FROM Ejercicios WHERE IdCoach = ?", [id]);
+      const [response] = await db.promise().query(
+        `
+          SELECT 
+            Ejercicios.*, 
+            CategoriasEjercicios.Categoria, 
+            MusculosObjetivos.MusculoObjetivo 
+          FROM Ejercicios
+          LEFT JOIN CategoriasEjercicios ON Ejercicios.IdCategoriaEjercicio = CategoriasEjercicios.Id
+          LEFT JOIN MusculosObjetivos ON Ejercicios.IdMusculoObjetivo = MusculosObjetivos.Id
+          WHERE Ejercicios.IdCoach = ?
+        `,
+        [id]
+      );
       console.log(response);
 
       return response;

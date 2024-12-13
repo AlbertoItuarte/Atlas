@@ -5,17 +5,21 @@ import {
   TouchableHighlight,
   ScrollView,
   Button,
+  Alert,
 } from "react-native";
 import axios from "axios";
 import Screen from "../components/Screen";
 import AgregarHorario from "../components/AgregarHorario"; // Importar el componente AgregarHorario
 import ModificarHorario from "../components/ModificarHorario"; // Importar el componente ModificarHorario
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system";
 
 const Horarios = () => {
   const [horarios, setHorarios] = useState([]);
   const [mensaje, setMensaje] = useState("");
-  const [dia, setDia] = useState("Lunes");
+  const [dia, setDia] = useState(""); // Inicialmente vacío para mostrar todos los horarios
   const [isAddOpen, setIsAddOpen] = useState(false); // Estado para controlar la visibilidad de AgregarHorario
   const [isEditOpen, setIsEditOpen] = useState(false); // Estado para controlar la visibilidad de ModificarHorario
   const [selectedHorario, setSelectedHorario] = useState(null); // Estado para el horario seleccionado
@@ -29,7 +33,7 @@ const Horarios = () => {
     if (idCoach) {
       obtenerHorarios();
     }
-  }, [idCoach, dia]);
+  }, [idCoach]);
 
   const obtenerHorarios = async () => {
     try {
@@ -43,10 +47,10 @@ const Horarios = () => {
       if (response.data.length > 0) {
         setHorarios(response.data);
         setMensaje(""); // Limpiar el mensaje si se encuentran horarios
-        console.log("Horarios response: ");
+        console.log("Horarios response: ", response.data);
       } else {
         setHorarios([]); // Limpiar los horarios si no se encuentran
-        setMensaje("No se encontraron horarios para este día");
+        setMensaje("No se encontraron horarios");
       }
     } catch (error) {
       console.error("Error fetching horarios:", error);
@@ -80,9 +84,76 @@ const Horarios = () => {
     obtenerHorarios();
   };
 
-  const horariosFiltrados = horarios.filter(
-    (horario) => horario.DiaSemana === dia
-  );
+  const horariosFiltrados = dia
+    ? horarios.filter((horario) => horario.DiaSemana === dia)
+    : horarios;
+
+  const ensureDirExists = async (dir) => {
+    const dirInfo = await FileSystem.getInfoAsync(dir);
+    if (!dirInfo.exists) {
+      await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+    }
+  };
+
+  const generarPDF = async () => {
+    try {
+      console.log("Generando PDF...");
+      let htmlContent = `
+        <h1>Lista de Horarios</h1>
+        <table border="1" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>Día</th>
+              <th>Cliente</th>
+              <th>Hora Inicio</th>
+              <th>Hora Fin</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${horariosFiltrados
+              .map(
+                (horario) => `
+              <tr>
+                <td>${horario.DiaSemana}</td>
+                <td>${horario.NombreCliente}</td>
+                <td>${horario.HoraInicio}</td>
+                <td>${horario.HoraFin}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      `;
+
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      // console.log("PDF generado en:", uri);
+
+      // Define la ruta personalizada
+      const newUri = `${FileSystem.documentDirectory}horarios/lista_horarios.pdf`;
+
+      // Asegúrate de que el directorio exista
+      await ensureDirExists(`${FileSystem.documentDirectory}horarios`);
+
+      // Mueve el archivo a la nueva ubicación
+      await FileSystem.moveAsync({
+        from: uri,
+        to: newUri,
+      });
+
+      // console.log("PDF movido a:", newUri);
+      // alert(`PDF generado en: ${newUri}`);
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(newUri);
+      } else {
+        alert("La función de compartir no está disponible en este dispositivo");
+      }
+    } catch (error) {
+      console.error("Error al generar el PDF:", error);
+      alert("Error al generar el PDF");
+    }
+  };
 
   return (
     <Screen pagina="Horarios">
@@ -145,6 +216,7 @@ const Horarios = () => {
             </TouchableHighlight>
           </View>
           <Button title="Agregar Horario" onPress={() => setIsAddOpen(true)} />
+          <Button title="Generar PDF" onPress={generarPDF} />
         </View>
         {mensaje ? (
           <View className="flex flex-row h-screen justify-center items-center px-4">
