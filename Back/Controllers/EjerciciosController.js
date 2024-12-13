@@ -62,10 +62,11 @@ const EjerciciosController = {
   obtenerEjerciciosFiltrados: async (req, res) => {
     try {
       console.log("Obteniendo ejercicios filtrados", req.query);
-      const { IdCategoriaEjercicio, IdMusculoObjetivo } = req.query;
+      const { IdCategoriaEjercicio, IdMusculoObjetivo, IdCoach } = req.query;
       const ejercicios = await EjerciciosModelo.obtenerEjerciciosFiltrados(
         IdCategoriaEjercicio,
-        IdMusculoObjetivo
+        IdMusculoObjetivo,
+        IdCoach
       );
       if (ejercicios.length > 0) {
         res.status(200).json(ejercicios);

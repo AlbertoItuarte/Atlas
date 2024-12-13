@@ -3,7 +3,7 @@ import { View, Text, Pressable, Image, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
   const [nombreEjercicio, setNombreEjercicio] = useState("");
@@ -72,17 +72,25 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
     console.log("IdCategoriaEjercicio jsx: ", IdCategoriaEjercicio);
     console.log("IdMusculoObjetivo jsx: ", idMusculo);
     try {
-      const response = await axios.get(
-        `http://192.168.1.75:5000/ejercicios/filtrados`,
-        {
-          params: {
-            IdCategoriaEjercicio,
-            IdMusculoObjetivo: idMusculo,
-          },
-        }
-      );
-      console.log("Ejercicios response jsx: ", response.data);
-      setEjercicios(response.data);
+      const loginData = await AsyncStorage.getItem("@login_data");
+      if (loginData !== null) {
+        console.log("Login Data:", loginData);
+        const { id } = JSON.parse(loginData);
+        console.log("Coach id agregar horario:", id);
+
+        const response = await axios.get(
+          `http://192.168.1.75:5000/ejercicios/filtrados`,
+          {
+            params: {
+              IdCategoriaEjercicio,
+              IdMusculoObjetivo: idMusculo,
+              IdCoach: id,
+            },
+          }
+        );
+        console.log("Ejercicios response jsx: ", response.data);
+        setEjercicios(response.data);
+      }
     } catch (error) {
       console.error("Error fetching ejercicios:", error);
     }
@@ -176,7 +184,7 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
                 />
               ))
             ) : (
-              <Picker.Item label="no jala" value="7" />
+              <Picker.Item label="" value="7" />
             )}
           </Picker>
         </View>
@@ -237,7 +245,7 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
               />
             ))
           ) : (
-            <Picker.Item label="no jala" value="7" />
+            <Picker.Item label="Aún no has agregado ejercicios" value="7" />
           )}
         </Picker>
       </View>

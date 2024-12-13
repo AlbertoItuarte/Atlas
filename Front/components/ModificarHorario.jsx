@@ -18,6 +18,12 @@ const ModificarHorario = ({ isOpen, onClose, horario }) => {
   const [horaFin, setHoraFin] = useState(horario.HoraFin);
 
   const handleEdit = async () => {
+    console.log("Editando horario...");
+    console.log("Horario: ", horario.Id);
+    console.log("ID Cliente: ", idCliente);
+    console.log("Día de la Semana: ", diaSemana);
+    console.log("Hora de Inicio: ", horaInicio);
+    console.log("Hora de Fin: ", horaFin);
     try {
       const response = await axios.put(
         `http://192.168.1.75:5000/horarios/editar`,
@@ -33,6 +39,23 @@ const ModificarHorario = ({ isOpen, onClose, horario }) => {
       manejarCierre();
     } catch (error) {
       console.error("Error al editar horario", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    console.log("Eliminando horario...");
+    console.log("Horario: ", horario.Id);
+    try {
+      const response = await axios.delete(
+        `http://192.168.1.75:5000/horarios/eliminar`,
+        {
+          data: { id: horario.Id },
+        }
+      );
+      console.log("Horario eliminado correctamente", response.data);
+      manejarCierre();
+    } catch (error) {
+      console.error("Error al eliminar horario", error);
     }
   };
 
@@ -56,23 +79,6 @@ const ModificarHorario = ({ isOpen, onClose, horario }) => {
         </Pressable>
       </View>
       <View className="flex space-y-4 w-full items-center pt-6">
-        <View className="flex flex-row items-center w-full">
-          <Text className="text-cyan-300 text-xl w-4/12">ID Cliente: </Text>
-          <TextInput
-            placeholder="ID Cliente"
-            value={idCliente}
-            onChangeText={setIdCliente}
-            className="bg-white"
-            style={{
-              height: 55,
-              width: 200,
-              backgroundColor: "white",
-              borderColor: "black",
-              borderWidth: 1,
-              borderRadius: 5,
-            }}
-          />
-        </View>
         <View className="flex flex-row items-center w-full">
           <Text className="text-cyan-300 text-xl w-4/12">
             Día de la Semana:{" "}
@@ -132,12 +138,20 @@ const ModificarHorario = ({ isOpen, onClose, horario }) => {
           />
         </View>
       </View>
-      <Pressable
-        onPress={handleEdit}
-        className="bg-cyan-400 rounded-md px-6 py-4"
-      >
-        <Text className="text-white font-bold">Guardar</Text>
-      </Pressable>
+      <View className="flex flex-row space-x-20 justify-between items-center">
+        <Pressable
+          onPress={handleDelete}
+          className="bg-red-500 rounded-md px-6 py-4"
+        >
+          <Text className="text-white font-bold">Eliminar</Text>
+        </Pressable>
+        <Pressable
+          onPress={handleEdit}
+          className="bg-cyan-400 rounded-md px-6 py-4"
+        >
+          <Text className="text-white font-bold">Guardar</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };

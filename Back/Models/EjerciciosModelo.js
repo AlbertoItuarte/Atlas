@@ -40,14 +40,14 @@ const EjerciciosModelo = {
       throw new Error("Error al obtener las categorias: " + error.message);
     }
   },
-  obtenerEjerciciosFiltrados: async (idCategoria, idMusculo) => {
+  obtenerEjerciciosFiltrados: async (idCategoria, idMusculo, idCoach) => {
     try {
       console.log("Obteniendo ejercicios filtrados en modelo");
       const [response] = await db
         .promise()
         .query(
-          "SELECT * FROM Ejercicios WHERE IdCategoriaEjercicio = ? AND IdMusculoObjetivo = ?",
-          [idCategoria, idMusculo]
+          "SELECT * FROM Ejercicios WHERE IdCategoriaEjercicio = ? AND IdMusculoObjetivo = ? AND IdCoach = ?",
+          [idCategoria, idMusculo, idCoach]
         );
       console.log(response);
 

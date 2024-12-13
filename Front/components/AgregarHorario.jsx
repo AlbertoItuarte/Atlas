@@ -15,9 +15,23 @@ const AgregarHorario = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      obtenerClientes();
+      obtenerIdCoach();
     }
   }, [isOpen]);
+
+  const obtenerIdCoach = async () => {
+    try {
+      const loginData = await AsyncStorage.getItem("@login_data");
+      if (loginData !== null) {
+        console.log("Login Data:", loginData);
+        const { id } = JSON.parse(loginData);
+        console.log("Coach id:", id);
+        obtenerClientes();
+      }
+    } catch (error) {
+      console.error("Error fetching coach id:", error);
+    }
+  };
 
   const obtenerClientes = async () => {
     try {
@@ -59,17 +73,24 @@ const AgregarHorario = ({ isOpen, onClose }) => {
         return;
       }
 
-      const response = await axios.post(
-        `http://192.168.1.75:5000/horarios/agregar`,
-        {
-          IdCliente: clienteSeleccionado.Id,
-          DiaSemana: diaSemana,
-          HoraInicio: horaInicio,
-          HoraFin: horaFin,
-        }
-      );
-      console.log("Horario agregado correctamente", response.data);
-      manejarCierre();
+      const loginData = await AsyncStorage.getItem("@login_data");
+      if (loginData !== null) {
+        console.log("Login Data:", loginData);
+        const { id } = JSON.parse(loginData);
+        console.log("Coach id agregar horario:", id);
+        const response = await axios.post(
+          `http://192.168.1.75:5000/horarios/agregar`,
+          {
+            IdCliente: clienteSeleccionado.Id,
+            DiaSemana: diaSemana,
+            HoraInicio: horaInicio,
+            HoraFin: horaFin,
+            IdCoach: id,
+          }
+        );
+        console.log("Horario agregado correctamente", response.data);
+        manejarCierre();
+      }
     } catch (error) {
       console.error("Error al agregar horario", error);
     }

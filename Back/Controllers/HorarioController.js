@@ -3,19 +3,12 @@ import HorarioModelo from "../Models/HorarioModelo.js";
 const HorarioController = {
   obtenerHorarios: async (req, res) => {
     try {
-      const { dia } = req.query; // Obtener el día de los parámetros de la URL
-      const horarios = await HorarioModelo.obtenerHorarios();
-      const horariosFiltrados = horarios.filter(
-        (horario) => horario.DiaSemana === dia
-      );
-      if (horariosFiltrados.length > 0) {
-        res.status(200).json(horariosFiltrados);
+      console.log("Obtener horarios controller: ", req.query);
+      const horarios = await HorarioModelo.obtenerHorarios(req.query);
+      if (horarios.length > 0) {
+        res.status(200).json(horarios);
       } else {
-        res
-          .status(404)
-          .json({
-            mensaje: "No se encontraron horarios para el día especificado",
-          });
+        res.status(404).json({ mensaje: "No se encontraron horarios" });
       }
     } catch (error) {
       console.error("Error en el servidor:", error);
@@ -43,9 +36,10 @@ const HorarioController = {
   },
   editarHorario: async (req, res) => {
     try {
-      const { id } = req.params; // ID del horario desde los parámetros de la URL
+      const { Id } = req.body; // ID del horario desde los parámetros de la URL
       const horario = req.body; // Nuevos datos del horario
-      const result = await HorarioModelo.editarHorario(id, horario);
+      console.log("Editar horario:", Id, horario);
+      const result = await HorarioModelo.editarHorario(Id, horario);
       if (result) {
         res.status(200).json({ mensaje: "Horario editado correctamente" });
       } else {
@@ -60,8 +54,10 @@ const HorarioController = {
     }
   },
   eliminarHorario: async (req, res) => {
+    console.log("Eliminar horario:", req.body);
     try {
-      const { id } = req.params; // ID del horario desde los parámetros de la URL
+      const { id } = req.body; // ID del horario desde los parámetros de la URL
+      console.log("Eliminar horario controller:", id);
       const result = await HorarioModelo.eliminarHorario(id);
       if (result) {
         res.status(200).json({ mensaje: "Horario eliminado correctamente" });

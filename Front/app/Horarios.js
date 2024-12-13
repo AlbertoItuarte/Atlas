@@ -10,29 +10,40 @@ import axios from "axios";
 import Screen from "../components/Screen";
 import AgregarHorario from "../components/AgregarHorario"; // Importar el componente AgregarHorario
 import ModificarHorario from "../components/ModificarHorario"; // Importar el componente ModificarHorario
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Horarios = () => {
   const [horarios, setHorarios] = useState([]);
   const [mensaje, setMensaje] = useState("");
-  const [dia, setDia] = useState("");
+  const [dia, setDia] = useState("Lunes");
   const [isAddOpen, setIsAddOpen] = useState(false); // Estado para controlar la visibilidad de AgregarHorario
   const [isEditOpen, setIsEditOpen] = useState(false); // Estado para controlar la visibilidad de ModificarHorario
   const [selectedHorario, setSelectedHorario] = useState(null); // Estado para el horario seleccionado
+  const [idCoach, setIdCoach] = useState(null);
 
-  const handleDia = (dia) => {
-    setDia(dia);
-    obtenerHorarios(dia);
-  };
+  useEffect(() => {
+    obtenerCoachId();
+  }, []);
 
-  const obtenerHorarios = async (dia) => {
+  useEffect(() => {
+    if (idCoach) {
+      obtenerHorarios();
+    }
+  }, [idCoach, dia]);
+
+  const obtenerHorarios = async () => {
     try {
+      console.log("ID Coach:", idCoach);
+
       const response = await axios.get("http://192.168.1.75:5000/horarios", {
-        params: { dia: dia },
+        params: {
+          idCoach,
+        },
       });
       if (response.data.length > 0) {
         setHorarios(response.data);
         setMensaje(""); // Limpiar el mensaje si se encuentran horarios
-        console.log("Horarios response: ", response.data);
+        console.log("Horarios response: ");
       } else {
         setHorarios([]); // Limpiar los horarios si no se encuentran
         setMensaje("No se encontraron horarios para este día");
@@ -44,24 +55,34 @@ const Horarios = () => {
     }
   };
 
-  useEffect(() => {
-    obtenerHorarios("Lunes"); // Obtener horarios para el lunes por defecto
-  }, []);
+  const obtenerCoachId = async () => {
+    try {
+      const value = await AsyncStorage.getItem("@login_data");
+      if (value !== null) {
+        setIdCoach(JSON.parse(value).id);
+        console.log("ID Coach:", idCoach);
+        obtenerHorarios();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const manejarCierre = () => {
     setIsAddOpen(false);
     setIsEditOpen(false);
-    obtenerHorarios(dia); // Refrescar los horarios después de cerrar el modal
+    obtenerHorarios();
   };
 
   const modificarHorario = (horario) => {
     setSelectedHorario(horario);
     setIsEditOpen(true);
+    obtenerHorarios();
   };
 
-  const horariosFiltrados = dia
-    ? horarios.filter((horario) => horario.DiaSemana === dia)
-    : horarios;
+  const horariosFiltrados = horarios.filter(
+    (horario) => horario.DiaSemana === dia
+  );
 
   return (
     <Screen pagina="Horarios">
@@ -88,37 +109,37 @@ const Horarios = () => {
           <View className="flex flex-row justify-around rounded-3xl items-center w-screen bg-gray-700">
             <TouchableHighlight
               className="bg-black h-10 w-10 rounded-full flex justify-center items-center"
-              onPress={() => handleDia("Lunes")}
+              onPress={() => setDia("Lunes")}
             >
               <Text className="text-white text-xl">L</Text>
             </TouchableHighlight>
             <TouchableHighlight
               className="bg-black h-10 w-10 rounded-full flex justify-center items-center"
-              onPress={() => handleDia("Martes")}
+              onPress={() => setDia("Martes")}
             >
               <Text className="text-white text-xl">M</Text>
             </TouchableHighlight>
             <TouchableHighlight
               className="bg-black h-10 w-10 rounded-full flex justify-center items-center"
-              onPress={() => handleDia("Miércoles")}
+              onPress={() => setDia("Miércoles")}
             >
               <Text className="text-white text-xl">M</Text>
             </TouchableHighlight>
             <TouchableHighlight
               className="bg-black h-10 w-10 rounded-full flex justify-center items-center"
-              onPress={() => handleDia("Jueves")}
+              onPress={() => setDia("Jueves")}
             >
               <Text className="text-white text-xl">J</Text>
             </TouchableHighlight>
             <TouchableHighlight
               className="bg-black h-10 w-10 rounded-full flex justify-center items-center"
-              onPress={() => handleDia("Viernes")}
+              onPress={() => setDia("Viernes")}
             >
               <Text className="text-white text-xl">V</Text>
             </TouchableHighlight>
             <TouchableHighlight
               className="bg-black h-10 w-10 rounded-full flex justify-center items-center"
-              onPress={() => handleDia("Sábado")}
+              onPress={() => setDia("Sábado")}
             >
               <Text className="text-white text-xl">S</Text>
             </TouchableHighlight>
@@ -132,7 +153,7 @@ const Horarios = () => {
         ) : (
           <View className="flex flex-col h-screen pt-6 ">
             <View className="flex flex-Row h-full w-screen">
-              <View className="flex flex-row py-4 bg-cyan-400 justify-between w-full items-center">
+              <View className="flex flex-row py-4 bg-cyan-400 justify-between w-screen items-center">
                 <Text className="w-3/12 pl-10 text-white">Día</Text>
                 <Text className="w-3/12 pl-4 text-white">Cliente</Text>
                 <Text className="w-3/12 pl-3 text-white">Hora Inicio</Text>
@@ -150,7 +171,7 @@ const Horarios = () => {
                         {horario.DiaSemana}
                       </Text>
                       <Text className="w-3/12 pl-4 text-white">
-                        {horario.IdCliente}
+                        {horario.NombreCliente}
                       </Text>
                       <Text className="w-3/12 pl-2 text-white">
                         {horario.HoraInicio}

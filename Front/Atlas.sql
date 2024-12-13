@@ -66,7 +66,9 @@ CREATE TABLE IF NOT EXISTS Horarios (
     DiaSemana VARCHAR(20) NOT NULL,
     HoraInicio TIME NOT NULL,
     HoraFin TIME NOT NULL,
+    IdCoach INT NOT NULL,
     FOREIGN KEY (IdCliente) REFERENCES Clientes(Id)
+    FOREIGN KEY (IdCoach) REFERENCES Coaches(id)
 );
 
 -- Crear la tabla Planes si no existe
@@ -122,6 +124,7 @@ CREATE TABLE IF NOT EXISTS MisRutinas (
     FOREIGN KEY (IdCoach) REFERENCES Coaches(id),
     FOREIGN KEY (IdEjercicio) REFERENCES Ejercicios(Id)
 );
+
 
 INSERT INTO Coaches (Usuario, Password)
 VALUES ('Yisus', '123456');
