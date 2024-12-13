@@ -7,6 +7,7 @@ import loginRoutes from "./Routes/LogInRuta.js";
 import clientesRoutes from "./Routes/ClientesRutas.js";
 import ejerciciosRoutes from "./Routes/EjerciciosRutas.js";
 import rutinasclientesRoutes from "./Routes/RutinasClientesRutas.js";
+import horarioRoutes from "./Routes/HorarioRutas.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use("/", loginRoutes);
 app.use("/clientes", clientesRoutes);
 app.use("/ejercicios", ejerciciosRoutes);
 app.use("/rutinasclientes", rutinasclientesRoutes);
+app.use("/horarios", horarioRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

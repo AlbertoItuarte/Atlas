@@ -3,6 +3,7 @@ import db from "../Config/db.js";
 
 const ClientesModelo = {
   obtenerClientesPorIdCoach: async (id) => {
+    console.log("ID del coach en modelo:", id); // Agregar log para depuración
     try {
       const [results] = await db
         .promise()
