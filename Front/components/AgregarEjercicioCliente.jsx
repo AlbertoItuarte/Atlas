@@ -147,6 +147,7 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
             value={series}
             onChangeText={setSeries}
             className="text-black rounded-md pl-2 bg-gray-300 w-8/12"
+            keyboardType="numeric"
           />
         </View>
         <View className="flex flex-row items-center w-full">
@@ -155,6 +156,7 @@ const AgregarEjercicioCliente = ({ isOpen, onClose, coachId, id }) => {
             value={repeticiones}
             onChangeText={setRepeticiones}
             className="text-black rounded-md pl-2 bg-gray-300 w-8/12"
+            keyboardType="numeric"
           />
         </View>
         <View className="flex flex-row items-center w-full">

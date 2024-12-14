@@ -11,6 +11,7 @@ import {
   Button,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { Link } from "expo-router";
 import axios from "axios";
 import ModificarRutinaUsuario from "../../components/ModificarRutinaUsuario";
 import AgregarEjercicioCliente from "../../components/AgregarEjercicioCliente";
@@ -34,7 +35,7 @@ export default function Rutinas() {
       const value = await AsyncStorage.getItem("@selected_id");
       if (value !== null) {
         setId(value);
-        console.log("ID del cliente en rutinas:", value, "\n\n\n\n\n\n");
+        console.log("ID del cliente en rutinas:", value);
         obtenerRutinas(value);
       } else {
         console.error("No se encontró el id seleccionado");
@@ -44,30 +45,25 @@ export default function Rutinas() {
     }
     setIsEditOpen(false);
   };
+
   useEffect(() => {
     getData();
   }, []);
 
+  useEffect(() => {
+    const fetchAsyncStorageData = async () => {
+      const storedId = await AsyncStorage.getItem("IdCliente");
+      const storedNombre = await AsyncStorage.getItem("NombreCliente");
+      console.log("ID del cliente en async storage:", storedId);
+      console.log("Nombre del cliente en async storage:", storedNombre);
+    };
+
+    fetchAsyncStorageData();
+  }, [id, nombreCliente]);
+
   const handleDia = (dia) => {
     setDia(dia);
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      return () => {
-        // Esta función se ejecutará cuando la pantalla pierda el foco
-        const removeSelectedId = async () => {
-          try {
-            await AsyncStorage.removeItem("@selected_id");
-          } catch (e) {
-            console.error("Error removing selected_id:", e);
-          }
-        };
-
-        removeSelectedId();
-      };
-    }, [])
-  );
 
   const agregarEjercicio = () => {
     console.log("Agregar ejercicio");
@@ -100,9 +96,11 @@ export default function Rutinas() {
       );
       if (response.data.length > 0) {
         setId(id);
-        console.log("ID del cliente en rutinas:", id, "\n\n\n\n\n\n");
+        console.log("ID del cliente en rutinas:", id);
         setRutinas(response.data);
         setNombreCliente(response.data[0].Nombre);
+        await AsyncStorage.setItem("NombreCliente", response.data[0].Nombre);
+        await AsyncStorage.setItem("IdCliente", id);
         console.log("Rutinas response: ", response.data);
       } else {
         setMensaje("No se encontraron rutinas para este usuario");
@@ -150,22 +148,15 @@ export default function Rutinas() {
       `;
 
       const { uri } = await Print.printToFileAsync({ html: htmlContent });
-      // console.log("PDF generado en:", uri);
 
-      // Define la ruta personalizada
       const newUri = `${FileSystem.documentDirectory}rutinas/${nombreCliente}_rutinas.pdf`;
 
-      // Asegúrate de que el directorio exista
       await ensureDirExists(`${FileSystem.documentDirectory}rutinas`);
 
-      // Mueve el archivo a la nueva ubicación
       await FileSystem.moveAsync({
         from: uri,
         to: newUri,
       });
-
-      // console.log("PDF movido a:", newUri);
-      // alert(`PDF generado en: ${newUri}`);
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(newUri);
@@ -248,6 +239,8 @@ export default function Rutinas() {
                   {" "}
                   Rutinas de {nombreCliente}
                 </Text>
+              </View>
+              <View className="flex flex-row-reverse justify-between w-screen items-center ">
                 <TouchableHighlight
                   className="bg-cyan-500 mt-4 rounded-2xl "
                   onPress={agregarEjercicio}
@@ -257,6 +250,13 @@ export default function Rutinas() {
                     <Text className="text-white">Ejercicio</Text>
                   </View>
                 </TouchableHighlight>
+                <Link
+                  href="EvaluacionFisica"
+                  onPress={eval}
+                  className="w-6/12 text-center bg-cyan-500 mt-4 px-2 py-2 rounded-2xl"
+                >
+                  <Text className="text-white">Evaluación física</Text>
+                </Link>
               </View>
             </View>
           ) : (

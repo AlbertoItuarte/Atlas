@@ -25,4 +25,12 @@ router.get("/rutinas", ClientesController.obtenerRutinas);
 
 router.post("/agregarejercicio", ClientesController.agregarEjercicio);
 
+router.get("/evaluaciones", ClientesController.obtenerEvaluaciones);
+
+router.post("/agregarevaluacion", ClientesController.agregarEvaluacion);
+
+// router.post("/agregarevaluacion", ClientesController.agregarEvaluacion);
+
+// router.delete("/eliminarevaluacion", ClientesController.eliminarEvaluacion);
+
 export default router;

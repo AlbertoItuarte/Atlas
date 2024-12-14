@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, Image, TextInput } from "react-native";
+import { View, Text, Pressable, Image, TextInput, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -123,6 +123,24 @@ const ModificarEjercicioCoach = ({ isOpen, onClose, ejercicio }) => {
     onClose();
   };
 
+  const warning = () => {
+    Alert.alert(
+      "Confirmación",
+      "Esta acción también eliminará el ejercicio de tus clientes. ¿Deseas continuar?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: handleDelete,
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <View
       style={{ paddingTop: insets.top + 20 }}
@@ -137,56 +155,6 @@ const ModificarEjercicioCoach = ({ isOpen, onClose, ejercicio }) => {
         </Pressable>
       </View>
       <View className="flex space-y-4 w-full items-center pt-6">
-        {/* <View className="flex flex-row items-center w-full"> */}
-        {/* <Text className="text-cyan-300 text-xl w-4/12">Categoría: </Text>
-          <Picker
-            selectedValue={categoriaSeleccionada}
-            style={{
-              height: 55,
-              width: 200,
-              backgroundColor: "white",
-              borderColor: "black",
-            }}
-            onValueChange={(itemValue) => {
-              console.log("Categoría seleccionada:", itemValue);
-              setCategoriaSeleccionada(itemValue);
-            }}
-          >
-            <Picker.Item label="Todas las Categorías" value="all" />
-            {categorias.map((categoria, index) => (
-              <Picker.Item
-                key={index}
-                label={categoria.Categoria}
-                value={categoria.Id}
-              />
-            ))}
-          </Picker>
-        </View>
-        <View className="flex flex-row items-center w-full">
-          <Text className="text-cyan-300 text-xl w-4/12">Músculo: </Text>
-          <Picker
-            selectedValue={musculoSeleccionado}
-            style={{
-              height: 55,
-              width: 200,
-              backgroundColor: "white",
-              borderColor: "black",
-            }}
-            onValueChange={(itemValue) => {
-              console.log("Músculo seleccionado:", itemValue);
-              setMusculoSeleccionado(itemValue);
-            }}
-          >
-            <Picker.Item label="Todos los Músculos" value="all" />
-            {musculosFiltrados.map((musculo, index) => (
-              <Picker.Item
-                key={index}
-                label={musculo.MusculoObjetivo}
-                value={musculo.Id}
-              />
-            ))}
-          </Picker>
-        </View> */}
         <View className="flex flex-row items-center w-full">
           <Text className="text-cyan-300 text-xl w-4/12">Ejercicio: </Text>
           <TextInput
@@ -203,7 +171,7 @@ const ModificarEjercicioCoach = ({ isOpen, onClose, ejercicio }) => {
         <Text className="text-white font-bold">Modificar Ejercicio</Text>
       </Pressable>
       <Pressable
-        onPress={handleDelete}
+        onPress={warning}
         className="bg-red-400 rounded-md px-6 py-4 mt-4"
       >
         <Text className="text-white font-bold">Eliminar</Text>

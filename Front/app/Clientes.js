@@ -29,6 +29,9 @@ export default function Clientes() {
   const router = useRouter();
 
   const fetchClientes = async (coachId) => {
+    console.log("Dropeando datos de cliente"); // Agregar log para depuración
+    await AsyncStorage.removeItem("selected_id");
+    await AsyncStorage.removeItem("NombreCliente");
     console.log("Petición GET a /clientes " + coachId + " 1"); // Agregar log para depuración
     try {
       console.log("Petición GET a /clientes " + coachId + " 2"); // Agregar log para depuración
@@ -49,6 +52,19 @@ export default function Clientes() {
       }
     }
   };
+
+  useEffect(() => {
+    const clearClientData = async () => {
+      try {
+        await AsyncStorage.removeItem("IdCliente");
+        await AsyncStorage.removeItem("NombreCliente");
+      } catch (error) {
+        console.error("Error al eliminar datos de cliente:", error);
+      }
+    };
+
+    clearClientData();
+  }, []);
 
   const getData = async () => {
     try {

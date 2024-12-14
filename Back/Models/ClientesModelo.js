@@ -144,6 +144,43 @@ const ClientesModelo = {
       throw new Error("Error al agregar un ejercicio: " + error.message);
     }
   },
+  obtenerEvaluaciones: async (id) => {
+    try {
+      console.log("ID del cliente en modelo:", id); // Agregar log para depuración
+      const [results] = await db
+        .promise()
+        .query(`SELECT * FROM EvaluacionesFisicas WHERE IdCliente = ?`, [id]);
+      // console.log("Evaluaciones del cliente:", results); // Agregar log para depuración
+      return results;
+    } catch (error) {
+      // console.error("Error al obtener las evaluaciones del cliente:", error);
+      throw new Error(
+        "Error al obtener las evaluaciones del cliente: " + error.message
+      );
+    }
+  },
+  agregarEvaluacion: async (evaluacion) => {
+    console.log("Evaluación en modelo:", evaluacion); // Agregar log para depuración
+    try {
+      const [response] = await db.promise().query(
+        `INSERT INTO EvaluacionesFisicas (IdCliente, FechaEval, Peso, PorcentGrasa, Notas, IdCoach) 
+          VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          evaluacion.IdCliente,
+          evaluacion.FechaEval,
+          evaluacion.Peso,
+          evaluacion.PorcentGrasa,
+          evaluacion.Notas,
+          evaluacion.IdCoach,
+        ]
+      );
+      // console.log("Evaluación agregada correctamente en Modelo"); // Agregar log para depuración
+      return true;
+    } catch (error) {
+      // console.error("Error al agregar una evaluación:", error);
+      throw new Error("Error al agregar una evaluación: " + error.message);
+    }
+  },
 };
 
 export default ClientesModelo;

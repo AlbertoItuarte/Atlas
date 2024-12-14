@@ -132,6 +132,46 @@ const ClientesController = {
       });
     }
   },
+  obtenerEvaluaciones: async (req, res) => {
+    try {
+      const { id } = req.query; // Obtener el id de los parámetros de la URL
+      console.log("ID del cliente controller:", id); // Agregar log para depuración
+      if (!id) {
+        res.status(400).json({ mensaje: "Falta el id del cliente" });
+        return;
+      }
+      const evaluaciones = await ClientesModelo.obtenerEvaluaciones(id);
+      console.log("Evaluaciones del cliente:", evaluaciones); // Agregar log para depuración
+      if (evaluaciones.length > 0) {
+        res.status(200).json(evaluaciones);
+      } else {
+        res.status(404).json({ mensaje: "No se encontraron evaluaciones" });
+      }
+    } catch (error) {
+      console.error("Error en el servidor:", error);
+      res
+        .status(500)
+        .json({ mensaje: "Error en el servidor", error: error.message });
+    }
+  },
+  agregarEvaluacion: async (req, res) => {
+    try {
+      const evaluacion = req.body; // Datos de la nueva evaluación
+      console.log("Evaluación en controlador:", evaluacion); // Agregar log para depuración
+      const result = await ClientesModelo.agregarEvaluacion(evaluacion);
+      if (result) {
+        res.status(201).json({ mensaje: "Evaluación agregada correctamente" });
+      } else {
+        res.status(400).json({ mensaje: "No se pudo agregar la evaluación" });
+      }
+    } catch (error) {
+      console.error("Error en el controlador al agregar la evaluación:", error);
+      res.status(500).json({
+        mensaje: "Error al agregar la evaluación",
+        error: error.message,
+      });
+    }
+  },
 };
 
 export default ClientesController;

@@ -111,11 +111,26 @@ const EjerciciosModelo = {
   eliminarEjercicio: async (id) => {
     try {
       console.log("Eliminando ejercicio en modelo:", id);
-      const [response] = await db
-        .promise()
-        .query("DELETE FROM Ejercicios WHERE Id = ?", [id]);
-      console.log(response);
-      return response;
+      const connection = await db.promise();
+      await connection.beginTransaction();
+
+      try {
+        await connection.query(
+          "DELETE FROM rutinasclientes WHERE IdEjercicio = ?",
+          [id]
+        );
+        const [response] = await connection.query(
+          "DELETE FROM ejercicios WHERE Id = ?",
+          [id]
+        );
+
+        await connection.commit();
+        console.log(response);
+        return response;
+      } catch (error) {
+        await connection.rollback();
+        throw error;
+      }
     } catch (error) {
       throw new Error("Error al eliminar el ejercicio: " + error.message);
     }

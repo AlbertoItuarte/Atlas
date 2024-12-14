@@ -32,7 +32,9 @@ CREATE TABLE IF NOT EXISTS EvaluacionesFisicas (
     Peso DECIMAL(5,2),
     PorcentGrasa DECIMAL(5,2),
     Notas TEXT,
-    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id)
+    IdCoach INT NOT NULL, 
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id),
+    FOREIGN KEY (IdCoach) REFERENCES Coaches(id)
 );
 
 -- Crear la tabla CategoriasEjercicios si no existe
