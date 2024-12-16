@@ -4,14 +4,14 @@ CREATE DATABASE IF NOT EXISTS atlas;
 -- Seleccionar la base de datos
 USE atlas;
 
--- Crear la tabla Coaches si no existe
+-- Crear la tabla Coaches
 CREATE TABLE IF NOT EXISTS Coaches (
     id INT AUTO_INCREMENT PRIMARY KEY,
     Usuario VARCHAR(255) NOT NULL,
     Password VARCHAR(255) NOT NULL
 );
 
--- Crear la tabla Clientes si no existe
+-- Crear la tabla Clientes
 CREATE TABLE IF NOT EXISTS Clientes (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(255) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Clientes (
     FOREIGN KEY (IdCoach) REFERENCES Coaches(id)
 );
 
--- Crear la tabla EvaluacionesFisicas si no existe
+-- Crear la tabla EvaluacionesFisicas
 CREATE TABLE IF NOT EXISTS EvaluacionesFisicas (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     IdCliente INT NOT NULL,
@@ -32,18 +32,16 @@ CREATE TABLE IF NOT EXISTS EvaluacionesFisicas (
     Peso DECIMAL(5,2),
     PorcentGrasa DECIMAL(5,2),
     Notas TEXT,
-    IdCoach INT NOT NULL, 
-    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id),
-    FOREIGN KEY (IdCoach) REFERENCES Coaches(id)
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE
 );
 
--- Crear la tabla CategoriasEjercicios si no existe
+-- Crear la tabla CategoriasEjercicios
 CREATE TABLE IF NOT EXISTS CategoriasEjercicios (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     Categoria VARCHAR(255) NOT NULL
 );
 
--- Crear la tabla MusculosObjetivos si no existe
+-- Crear la tabla MusculosObjetivos
 CREATE TABLE IF NOT EXISTS MusculosObjetivos (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     MusculoObjetivo VARCHAR(255) NOT NULL,
@@ -51,7 +49,7 @@ CREATE TABLE IF NOT EXISTS MusculosObjetivos (
     FOREIGN KEY (IdCategoria) REFERENCES CategoriasEjercicios(Id)
 );
 
--- Crear la tabla Ejercicios si no existe
+-- Crear la tabla Ejercicios
 CREATE TABLE IF NOT EXISTS Ejercicios (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     Ejercicio VARCHAR(255) NOT NULL,
@@ -61,7 +59,7 @@ CREATE TABLE IF NOT EXISTS Ejercicios (
     FOREIGN KEY (IdCategoriaEjercicio) REFERENCES CategoriasEjercicios(Id)
 );
 
--- Crear la tabla Horarios si no existe
+-- Crear la tabla Horarios
 CREATE TABLE IF NOT EXISTS Horarios (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     IdCliente INT NOT NULL,
@@ -69,21 +67,21 @@ CREATE TABLE IF NOT EXISTS Horarios (
     HoraInicio TIME NOT NULL,
     HoraFin TIME NOT NULL,
     IdCoach INT NOT NULL,
-    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id)
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE,
     FOREIGN KEY (IdCoach) REFERENCES Coaches(id)
 );
 
--- Crear la tabla Planes si no existe
+-- Crear la tabla Planes
 CREATE TABLE IF NOT EXISTS Planes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    Id INT AUTO_INCREMENT PRIMARY KEY,
     IdCoach INT NOT NULL,
     Plan VARCHAR(255) NOT NULL,
-    Duración INT NOT NULL, -- Duración en días, meses, etc.
+    Duracion INT NOT NULL, -- Duración en días, meses, etc.
     Costo DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (IdCoach) REFERENCES Coaches(id)
 );
 
--- Crear la tabla Contratos si no existe
+-- Crear la tabla Contratos
 CREATE TABLE IF NOT EXISTS Contratos (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     IdCliente INT NOT NULL,
@@ -91,11 +89,11 @@ CREATE TABLE IF NOT EXISTS Contratos (
     FechaInicio DATE NOT NULL,
     FechaFin DATE NOT NULL,
     Monto DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE
-    FOREIGN KEY (IdPlan) REFERENCES Planes(id)
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE,
+    FOREIGN KEY (IdPlan) REFERENCES Planes(Id)
 );
 
--- Crear la tabla Pagos si no existe
+-- Crear la tabla Pagos
 CREATE TABLE IF NOT EXISTS Pagos (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     IdContrato INT NOT NULL,
@@ -104,6 +102,7 @@ CREATE TABLE IF NOT EXISTS Pagos (
     FOREIGN KEY (IdContrato) REFERENCES Contratos(Id) ON DELETE CASCADE
 );
 
+-- Crear la tabla RutinasClientes
 CREATE TABLE IF NOT EXISTS RutinasClientes (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     IdCliente INT NOT NULL,
@@ -111,12 +110,12 @@ CREATE TABLE IF NOT EXISTS RutinasClientes (
     Series INT NOT NULL,
     Repeticiones INT NOT NULL,
     Dia VARCHAR(20) NOT NULL,
-    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id),
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE,
     FOREIGN KEY (IdEjercicio) REFERENCES Ejercicios(Id),
-    UNIQUE KEY unique_rutina_cliente (IdCliente, IdEjercicio, Dia) -- Evita duplicados
+    UNIQUE KEY unique_rutina_cliente (IdCliente, IdEjercicio, Dia)
 );
 
--- Crear la tabla MisRutinas si no existe
+-- Crear la tabla MisRutinas
 CREATE TABLE IF NOT EXISTS MisRutinas (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     IdCoach INT NOT NULL,

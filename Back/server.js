@@ -9,6 +9,7 @@ import ejerciciosRoutes from "./Routes/EjerciciosRutas.js";
 import rutinasclientesRoutes from "./Routes/RutinasClientesRutas.js";
 import horarioRoutes from "./Routes/HorarioRutas.js";
 import transaccionesRoutes from "./Routes/TransaccionesRutas.js";
+import contratosRoutes from "./Routes/ContratosRutas.js";
 
 dotenv.config();
 
@@ -22,13 +23,13 @@ app.use(express.json());
 app.use(cors({ origin: "*" }));
 
 // Ruta para el inicio de sesión
-
 app.use("/", loginRoutes);
 app.use("/clientes", clientesRoutes);
 app.use("/ejercicios", ejerciciosRoutes);
 app.use("/rutinasclientes", rutinasclientesRoutes);
 app.use("/horarios", horarioRoutes);
 app.use("/transacciones", transaccionesRoutes);
+app.use("/contratos", contratosRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

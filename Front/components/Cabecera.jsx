@@ -39,6 +39,9 @@ const Cabecera = ({ pagina }) => {
         <Link className="self-center" href="/Pagos">
           <Text className="text-[#41E4F0] text-2xl">Pagos</Text>
         </Link>
+        <Link className="self-center" href="/Contratos">
+          <Text className="text-[#41E4F0] text-2xl">Contratos</Text>
+        </Link>
         <Link asChild href="/" className="self-end">
           <Pressable className="self-end" onPress={handleLogOut}>
             <Image
