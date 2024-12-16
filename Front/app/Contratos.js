@@ -70,32 +70,35 @@ export default function Contratos() {
                     key={index.toString()}
                     onLongPress={() => console.log("Editar", contrato)}
                     onPress={() => console.log("Seleccionar", contrato.Id)}
-                    className=""
+                    className="flex w-screen justify-center items-center"
                   >
-                    <View className="flex flex-row w-screen justify-between items-center">
-                      <Text className="text-white w-2/12 text-center">
-                        {contrato.NombreCliente} {contrato.ApellidoPCliente}
-                      </Text>
-                      <Text className="text-white  h-12 w-3/12 text-center">
-                        {
-                          new Date(contrato.FechaInicio)
-                            .toISOString()
-                            .split("T")[0]
-                        }
-                      </Text>
-                      <Text className="text-white h-12 w-3/12 text-center">
-                        {
-                          new Date(contrato.FechaFin)
-                            .toISOString()
-                            .split("T")[0]
-                        }
-                      </Text>
-                      <Text className="text-white h-12w-1/5 text-center">
-                        {contrato.NombrePlan.slice(0, 3)}
-                      </Text>
-                      <Text className="text-white h-12 w-1/5 text-center">
-                        {parseInt(contrato.Monto, 10)}
-                      </Text>
+                    <View>
+                      <View className="flex flex-row w-screen items-center">
+                        <Text className="text-white w-2/12 text-center">
+                          {contrato.NombreCliente} {contrato.ApellidoPCliente}
+                        </Text>
+                        <Text className="text-white  h-12 w-3/12 text-center">
+                          {
+                            new Date(contrato.FechaInicio)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </Text>
+                        <Text className="text-white h-12 w-3/12 text-center">
+                          {
+                            new Date(contrato.FechaFin)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </Text>
+                        <Text className="text-white h-12 w-2/12 text-center">
+                          {contrato.NombrePlan.slice(0, 3)}
+                        </Text>
+                        <Text className="text-white h-12 w-2/12 text-center">
+                          {parseInt(contrato.Monto, 10)}
+                        </Text>
+                      </View>
+                      <View className="w-screen bg-gray-300 h-0.5"></View>
                     </View>
                   </TouchableHighlight>
                 ))}
