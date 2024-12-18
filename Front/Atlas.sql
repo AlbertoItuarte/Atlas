@@ -64,7 +64,6 @@ CREATE TABLE IF NOT EXISTS Ejercicios (
     FOREIGN KEY (IdCoach) REFERENCES Coaches(id)
 );
 
-
 -- Crear la tabla Horarios
 CREATE TABLE IF NOT EXISTS Horarios (
     Id INT AUTO_INCREMENT PRIMARY KEY,
@@ -111,6 +110,7 @@ CREATE TABLE IF NOT EXISTS Pagos (
     FOREIGN KEY (IdContrato) REFERENCES Contratos(Id) ON DELETE CASCADE,
     FOREIGN KEY (IdCoach) REFERENCES Coaches(id)
 );
+
 -- Crear la tabla RutinasClientes
 CREATE TABLE IF NOT EXISTS RutinasClientes (
     Id INT AUTO_INCREMENT PRIMARY KEY,
@@ -134,7 +134,6 @@ CREATE TABLE IF NOT EXISTS MisRutinas (
     FOREIGN KEY (IdCoach) REFERENCES Coaches(id),
     FOREIGN KEY (IdEjercicio) REFERENCES Ejercicios(Id)
 );
-
 
 INSERT INTO Coaches (Usuario, Password)
 VALUES ('Yisus', '123456');
@@ -260,37 +259,3 @@ VALUES
 (2, 1, 1400, '2024-02-15'),
 (3, 1, 500, '2024-03-15'),
 (4, 1, 2500, '2024-01-15');
--- ALTER TABLE EvaluacionesFisicas
--- DROP FOREIGN KEY EvaluacionesFisicas_ibfk_1;
-
--- ALTER TABLE EvaluacionesFisicas
--- ADD CONSTRAINT EvaluacionesFisicas_ibfk_1
--- FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE;
-
--- ALTER TABLE Horarios
--- DROP FOREIGN KEY Horarios_ibfk_1;
-
--- ALTER TABLE Horarios
--- ADD CONSTRAINT Horarios_ibfk_1
--- FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE;
-
--- ALTER TABLE Contratos
--- DROP FOREIGN KEY Contratos_ibfk_1;
-
--- ALTER TABLE Contratos
--- ADD CONSTRAINT Contratos_ibfk_1
--- FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE;
-
--- ALTER TABLE Pagos
--- DROP FOREIGN KEY Pagos_ibfk_1;
-
--- ALTER TABLE Pagos
--- ADD CONSTRAINT Pagos_ibfk_1
--- FOREIGN KEY (IdContrato) REFERENCES Contratos(Id) ON DELETE CASCADE;
-
--- ALTER TABLE RutinasClientes
--- DROP FOREIGN KEY RutinasClientes_ibfk_1;
-
--- ALTER TABLE RutinasClientes
--- ADD CONSTRAINT RutinasClientes_ibfk_1
--- FOREIGN KEY (IdCliente) REFERENCES Clientes(Id) ON DELETE CASCADE;

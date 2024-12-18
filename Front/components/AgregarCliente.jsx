@@ -125,6 +125,8 @@ const EditarUsuario = ({ isOpen, onClose, coachId }) => {
             onChangeText={setFechaNac}
             className=" text-black rounded-md pl-2 bg-gray-300 w-8/12"
             defaultValue={fechaNac}
+            keyboardType="numeric"
+            maxLength={10}
           />
         </View>
       </View>

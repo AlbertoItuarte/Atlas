@@ -143,6 +143,8 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
           onChangeText={setCelular}
           className="text-white rounded-md pl-2 bg-gray-500 w-8/12"
           value={celular || ""}
+          keyboardType="numeric"
+          maxLength={10}
         />
       </View>
       <View className="flex flex-row items-center">
@@ -153,6 +155,8 @@ const EditarUsuario = ({ isOpen, onClose, cliente }) => {
           value={
             fechaNac ? fechaNac.split("T")[0] : "Error al obtener la fecha"
           }
+          keyboardType="numeric"
+          maxLength={10}
         />
       </View>
       <View className="flex flex-row items-center space-x-8">

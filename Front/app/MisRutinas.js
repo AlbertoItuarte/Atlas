@@ -3,7 +3,6 @@ import {
   Text,
   TouchableHighlight,
   Image,
-  Button,
   ScrollView,
 } from "react-native";
 import { Link } from "expo-router";
@@ -106,7 +105,9 @@ export default MisRutinas = () => {
             />
           </View>
           {idCoach ? (
-            <View className="flex flex-col mt-4 rounded justify-center items-center w-screen">
+            <View
+              className={`${!isEditOpen && !isAgregarMisRutinasOpen ? "flex  flex-col mt-4 rounded justify-center items-center w-screen" : "hidden"} `}
+            >
               <View className="flex flex-row justify-around rounded-3xl items-center w-screen bg-gray-700">
                 <TouchableHighlight
                   className="bg-black h-10 w-10 rounded-full flex justify-center items-center"
@@ -188,10 +189,6 @@ export default MisRutinas = () => {
                     </View>
                   </TouchableHighlight>
                 ))}
-                <Button
-                  title="Generar PDF"
-                  onPress={() => generarPDF(rutinasFiltradas)}
-                />
               </View>
             </View>
           ) : (
