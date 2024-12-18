@@ -21,6 +21,26 @@ const LoginModelo = {
       );
     }
   },
+  registrarUsuario: async (Usuario, Password) => {
+    try {
+      console.log("Registrando usuario: ", Usuario);
+      console.log("Registrando contraseña: ", Password);
+      const [results] = await db
+        .promise()
+        .query("INSERT INTO Coaches (Usuario, Password) VALUES (?, ?)", [
+          Usuario,
+          Password,
+        ]);
+      console.log("Usuario registrado correctamente");
+      return results;
+    } catch (error) {
+      if (error.code === "ER_DUP_ENTRY") {
+        console.error("Usuario ya registrado");
+        throw new Error("Usuario ya registrado");
+      }
+      console.error("Error al registrar el usuario: " + error.message);
+    }
+  },
 };
 
 export default LoginModelo;

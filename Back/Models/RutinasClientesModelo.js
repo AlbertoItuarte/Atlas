@@ -101,6 +101,35 @@ const RutinasClientesModelo = {
       throw new Error("Error al modificar un ejercicio: " + error.message);
     }
   },
+  obtenerRutinasCoach: async (id) => {
+    console.log("ID del coach en modelo:", id); // Agregar log para depuración
+    try {
+      // console.log("ID del coach en modelo:", id); // Agregar log para depuración
+      const [results] = await db.promise().query(
+        `SELECT 
+            Ejercicios.Ejercicio,
+            MisRutinas.Series,
+            MisRutinas.Repeticiones,
+            MisRutinas.Dia
+          FROM
+            MisRutinas
+          JOIN
+            Ejercicios
+          ON
+            MisRutinas.IdEjercicio = Ejercicios.Id
+          WHERE 
+            MisRutinas.IdCoach = ?`,
+        [id]
+      );
+      console.log("Rutinas del coach modelo final:", results); // Agregar log para depuración
+      return results;
+    } catch (error) {
+      // console.error("Error al obtener las rutinas del coach:", error);
+      throw new Error(
+        "Error al obtener las rutinas del coach: " + error.message
+      );
+    }
+  },
 };
 
 export default RutinasClientesModelo;

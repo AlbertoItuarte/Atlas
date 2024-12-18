@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import axios from "axios";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LogIn() {
@@ -81,21 +81,13 @@ export default function LogIn() {
     <ImageBackground
       source={require("../assets/gymBG.jpg")}
       style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        width: "100%",
+        height: "103%",
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
       }}
     >
-      <View
-        className="flex-1 justify-center items-center w-full"
-        style={{
-          paddingTop: insets.top,
-          paddingBottom: insets.bottom,
-          backgroundImage: "url('../assets/gymBG.jpg')",
-        }}
-      >
+      <View className="flex-1 justify-center items-center w-screen h-screen">
         <Text className="text-white text-2xl pb-6">Bienvenido a Atlas</Text>
         <TextInput
           className="h-10 border border-gray-400 rounded w-72 p-2 mt-2 text-white"
@@ -116,12 +108,13 @@ export default function LogIn() {
         >
           <Text className="text-white text-center">Inicia sesión</Text>
         </TouchableHighlight>
-        <TouchableHighlight
-          className="p-2 mt-2 rounded w-36 bg-purple-600"
-          onPress={() => alert("Registro")}
+
+        <Link
+          href="/SignUp"
+          className="text-white px-8 py-2 border-2 rounded-md bg-purple-500 border-purple-600 mt-6 text-center"
         >
           <Text className="text-white text-center">Regístrate</Text>
-        </TouchableHighlight>
+        </Link>
       </View>
     </ImageBackground>
   );

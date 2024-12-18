@@ -8,7 +8,8 @@ USE atlas;
 CREATE TABLE IF NOT EXISTS Coaches (
     id INT AUTO_INCREMENT PRIMARY KEY,
     Usuario VARCHAR(255) NOT NULL,
-    Password VARCHAR(255) NOT NULL
+    Password VARCHAR(255) NOT NULL,
+    UNIQUE KEY unique_usuario (Usuario)
 );
 
 -- Crear la tabla Clientes

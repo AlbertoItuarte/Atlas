@@ -11,4 +11,6 @@ router.delete("/eliminar", RutinasClientes.eliminarEjercicio);
 
 router.put("/modificar", RutinasClientes.modificarEjercicio);
 
+router.get("/rutinas", RutinasClientes.obtenerRutinasCoach);
+
 export default router;

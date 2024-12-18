@@ -113,11 +113,13 @@ const EditarUsuario = ({ isOpen, onClose, coachId }) => {
             onChangeText={setCelular}
             className=" text-black rounded-md pl-2 bg-gray-300 w-8/12"
             defaultValue={celular}
+            keyboardType="numeric"
+            maxLength={10}
           />
         </View>
         <View className="flex flex-row items-center w-full">
           <Text className="text-cyan-300 text-xl w-4/12">
-            FechaNac: YY/MM/DD
+            FechaNac: YYYY-MM-DD
           </Text>
           <TextInput
             onChangeText={setFechaNac}

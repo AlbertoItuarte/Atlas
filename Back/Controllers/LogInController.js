@@ -31,6 +31,21 @@ const LogInController = {
         .json({ mensaje: "Error en el servidor", error: error.message });
     }
   },
+  registrarUsuario: async (req, res) => {
+    console.log("Datos controller:", req.body);
+    try {
+      const { Usuario, Password } = req.body;
+      if (!Usuario || !Password) {
+        return res.status(400).json({ mensaje: "Faltan datos" });
+      }
+      const usuario = await LoginModelo.registrarUsuario(Usuario, Password);
+      res.status(200).json(usuario);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ mensaje: "Error en el servidor", error: error.message });
+    }
+  },
 };
 
 export default LogInController;

@@ -7,6 +7,7 @@ import loginRoutes from "./Routes/LogInRuta.js";
 import clientesRoutes from "./Routes/ClientesRutas.js";
 import ejerciciosRoutes from "./Routes/EjerciciosRutas.js";
 import rutinasclientesRoutes from "./Routes/RutinasClientesRutas.js";
+import misrutinasRoutes from "./Routes/MisRutinasRutas.js"; // Importar las nuevas rutas
 import horarioRoutes from "./Routes/HorarioRutas.js";
 import transaccionesRoutes from "./Routes/TransaccionesRutas.js";
 import contratosRoutes from "./Routes/ContratosRutas.js";
@@ -24,9 +25,11 @@ app.use(cors({ origin: "*" }));
 
 // Ruta para el inicio de sesión
 app.use("/", loginRoutes);
+app.use("/signup", loginRoutes);
 app.use("/clientes", clientesRoutes);
 app.use("/ejercicios", ejerciciosRoutes);
 app.use("/rutinasclientes", rutinasclientesRoutes);
+app.use("/misrutinas", misrutinasRoutes); // Usar las nuevas rutas
 app.use("/horarios", horarioRoutes);
 app.use("/transacciones", transaccionesRoutes);
 app.use("/contratos", contratosRoutes);
